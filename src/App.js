@@ -1,6 +1,9 @@
 import './App.css';
 import { Route } from "react-router-dom"
 import { useEffect, useState } from "react";
+import Home from '../src/pages/Home'
+import Edit from '../src/pages/Edit'
+import Live from '../src/pages/Live'
 
 
 function App() {
@@ -8,10 +11,17 @@ function App() {
   const redirect = encodeURIComponent('http://localhost:3000/oauth/callback')
   const CLIENT_SECRET = "ddb28c33d638d5368301517741b24857f545bdc02e5af0cc8d9ce2d152c8ef56"
   return (
-    <div>
-      <div>
-        <a href={`https://api.planningcenteronline.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirect}&response_type=code&scope=people registrations check_ins calendar giving groups services`}>Login</a>
-      </div>
+    <div className='App'>
+      <Route exact path="/">
+        <Home />
+      </Route>
+      <Route exact path="/edit">
+        <Edit />
+      </Route>
+      <Route exact path="/Live">
+        <Live />
+      </Route>
+      
     </div>
   );
 }
