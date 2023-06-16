@@ -1,0 +1,47 @@
+.Fader[type="range"][orient="vertical"] {
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* Chromium */
+  width: 8px;
+  height: 175px;
+  padding: 0 5px;
+}
+
+.FaderDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.DCAfader,
+.Instfader,
+.Singerfader,
+.Stemfader {
+  display: flex;
+  justify-content: center;
+}
+
+#DCAfader,
+#Singerfader,
+#Instfader,
+#Stemfader {
+  display: flex;
+  justify-content: center;
+}
+
+.screen {
+  border: solid 0.2px;
+  margin: 10px;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 15px;
+}
+
+.dB {
+  font-size: 14px;
+}

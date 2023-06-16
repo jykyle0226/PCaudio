@@ -30,10 +30,17 @@ const Edit = (props) => {
   const defaultServiceOption = ServiceOptions[0];
   const defaultSongOption = SongOptions[0];
 
-
   return (
     <div>
-      <h1>Edit Page</h1>
+      <div className="nav">
+        <a href="/">
+          <h1>Home</h1>
+        </a>
+        <a href="/live">
+          <h1>Live</h1>
+        </a>
+      </div>
+
       <div className="EditNav">
         <h1>Service: </h1>
         <Dropdown
