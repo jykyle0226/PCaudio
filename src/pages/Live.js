@@ -117,8 +117,9 @@ const ListItem = styled("li")`
 
 const Live = (props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSongOpen, setSongIsOpen] = useState(false);
   const Servicetoggling = () => setIsOpen(!isOpen);
-  const Songtoggling = () => setIsOpen(!isOpen);
+  const Songtoggling = () => setSongIsOpen(!isSongOpen);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSongOption, setSelectedSongOption] = useState(null);
 
@@ -144,8 +145,9 @@ const Live = (props) => {
 
   const onSongOptionClicked = (value) => () => {
     setSelectedSongOption(value);
-    setIsOpen(false);
+    setSongIsOpen(false);
   };
+
 
   const options = ServiceOptions;
   const Songoptions = SongOptions;
@@ -237,7 +239,7 @@ const Live = (props) => {
                 {" "}
                 {selectedSongOption || "Song"}
               </DropDownHeader>{" "}
-              {isOpen && (
+              {isSongOpen && (
                 <DropDownListContainer>
                   <DropDownList>
                     {Songoptions.map((songOption) => (

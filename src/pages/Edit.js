@@ -13,10 +13,11 @@ import { useState } from "react";
 
 const Edit = (props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const toggling = () => setIsOpen(!isOpen);
+  const [isSongOpen, setSongIsOpen] = useState(false);
+  const Servicetoggling = () => setIsOpen(!isOpen);
+  const Songtoggling = () => setSongIsOpen(!isSongOpen);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSongOption, setSelectedSongOption] = useState(null);
-
   const onOptionClicked = (value) => () => {
     setSelectedOption(value);
     setIsOpen(false);
@@ -24,8 +25,9 @@ const Edit = (props) => {
 
   const onSongOptionClicked = (value) => () => {
     setSelectedSongOption(value);
-    setIsOpen(false);
+    setSongIsOpen(false);
   };
+
 
   const DCAdata = DCAArr.map((ele, index) => {
     return <DCA {...ele} key={index} />;
@@ -188,8 +190,8 @@ const Edit = (props) => {
             <DropdownBg>
               <DropdownInner></DropdownInner>
             </DropdownBg>
-            <DropDownContainer>
-              <DropDownHeader onClick={toggling}>
+            <DropDownContainer div class="text" >
+              <DropDownHeader onClick={Servicetoggling}>
                 {" "}
                 {selectedOption || "Service"}
               </DropDownHeader>{" "}
@@ -222,11 +224,11 @@ const Edit = (props) => {
               <DropdownInner></DropdownInner>
             </DropdownBg>
             <DropDownContainer>
-              <DropDownHeader onClick={toggling}>
+              <DropDownHeader onClick={Songtoggling}>
                 {" "}
                 {selectedSongOption || "Song"}
               </DropDownHeader>{" "}
-              {isOpen && (
+              {isSongOpen && (
                 <DropDownListContainer>
                   <DropDownList>
                     {Songoptions.map((songOption) => (
