@@ -245,7 +245,9 @@ const Edit = (props) => {
         </div>
       </div>
       <section className="Data">
-        <div type="button" class="btn cube cube-hover">
+        <div className="UpperAndLower">
+        <div className="Upper">
+        <div type="button" class="btn cube1">
           <div class="bg-top">
             <div class="bg-inner"></div>
           </div>
@@ -262,41 +264,7 @@ const Edit = (props) => {
           </div>
           {DCAdata}
         </div>
-        <div type="button" class="btn cube cube-hover">
-          <div class="bg-top">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg-right">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="text">
-            <div id="db">
-              <h1 className="ADCnote">Instrumentals</h1>
-            </div>
-          </div>
-          {Instdata}
-        </div>
-        <div type="button" class="btn cube cube-hover">
-          <div class="bg-top">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg-right">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg">
-            <div id="this" class="bg-inner"></div>
-          </div>
-          <div class="text">
-            <div id="db">
-              <h1 className="ADCnote">Vocals</h1>
-            </div>
-          </div>
-          {Singerdata}
-        </div>
-        <div type="button" class="btn cube cube-hover">
+        <div type="button" class="btn cube1">
           <div class="bg-top">
             <div class="bg-inner"></div>
           </div>
@@ -313,6 +281,48 @@ const Edit = (props) => {
           </div>
           {Stemdata}
         </div>
+        </div>
+        <div className="Lower">
+        <div type="button" class="btn cube1 ">
+          <div class="bg-top">
+            <div class="bg-inner"></div>
+          </div>
+          <div class="bg-right">
+            <div class="bg-inner"></div>
+          </div>
+          <div class="bg">
+            <div class="bg-inner"></div>
+          </div>
+          <div class="text">
+            <div id="db">
+              <h1 className="ADCnote">Instrumentals</h1>
+            </div>
+          </div>
+          {Instdata}
+        </div>
+
+        <div type="button" class="btn cube1">
+          <div class="bg-top">
+            <div class="bg-inner"></div>
+          </div>
+          <div class="bg-right">
+            <div class="bg-inner"></div>
+          </div>
+          <div class="bg">
+            <div id="this" class="bg-inner"></div>
+          </div>
+          <div class="text">
+            <div id="db">
+              <h1 className="ADCnote">Vocals</h1>
+            </div>
+          </div>
+          {Singerdata}
+        </div>
+        </div>
+      
+        </div>
+        
+        
       </section>
     </div>
   );

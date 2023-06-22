@@ -263,3 +263,33 @@ a:active {
 html{
   background-image: url(../img/background.avif);
 }
+
+.Edittext{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.Edittext input{
+  padding: 4px 10px;
+  outline: none;
+  background: transparent;
+  border-radius: 5px;
+  color: #fff;
+  border: 1px solid#eed056;
+  font-size: 1em;
+  color: #ee8456;
+}
+
+.Upper, .Lower{
+  display: flex;
+  justify-content: center;
+
+}
+.UpperAndLower{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

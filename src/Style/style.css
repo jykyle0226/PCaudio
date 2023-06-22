@@ -163,3 +163,469 @@ html{
   margin: 10px;
   background-size:cover;
 }
+
+.AudioDataComp{
+  display: flex;
+  justify-content: center;
+  border: solid 1px black;
+
+}
+
+
+.EditNav{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.ADCdb{
+  width: 50px;
+  height: 20px;
+}
+
+
+.Data{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.DataLeft{
+  display: flex;
+  flex-direction: column;
+  margin-right: 100px;
+}
+
+
+#db{
+  display: flex;
+  justify-content: center;
+  height: 34px;
+}
+
+
+.dBBoxL,.dBBoxR{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+}
+
+
+.thebox{
+  width: 200px;
+}
+
+.AudioDataComp{
+  display: flex;
+  justify-content: center;
+  border: solid 1px black;
+
+}
+
+
+.EditNav{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.ADCname{
+
+  text-align: left;
+}
+
+.ADCdb{
+  width: 50px;
+  height: 20px;
+}
+.ADCnote{
+  width: 100px;
+}
+
+.Data{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.DataLeft{
+  display: flex;
+  flex-direction: column;
+  margin-right: 100px;
+}
+
+
+#db{
+  display: flex;
+  justify-content: center;
+  height: 34px;
+}
+
+
+.dBBoxL,.dBBoxR{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+}
+
+
+.thebox{
+  width: 200px;
+}
+
+.Fader[type="range"][orient="vertical"] {
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* Chromium */
+  width: 8px;
+  height: 175px;
+  padding: 0 5px;
+}
+
+.FaderDiv {
+  display: inline;
+
+}
+
+.DCAfader,
+.Instfader,
+.Singerfader,
+.Stemfader {
+  display: flex;
+  justify-content: center;
+}
+
+#DCAfader,
+#Singerfader,
+#Instfader,
+#Stemfader {
+  display: flex;
+  justify-content: center;
+}
+
+.screen {
+  border: solid 0.2px;
+  margin: 10px;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-image: url('../img/screen.jpeg');
+  background-size:cover;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: -5px;
+}
+
+.dB {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.indicator {
+  background-color: red;
+  border: 1px solid black;
+  margin: 2px;
+  width: 70px;
+  margin: 10px;
+  height: 15px;
+}
+
+/* CSS */
+.button-5 {
+  align-items: center;
+  background-clip: padding-box;
+  background-color: #289600;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(0.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+.button-5:hover,
+.button-5:focus {
+  background-color: #7438ff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.button-5:hover {
+  transform: translateY(-1px);
+}
+
+.button-5:active {
+  background-color: #bda1ff;
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  transform: translateY(0);
+}
+.home,
+.edit {
+  margin: 20px;
+}
+.nav {
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+  height: 200px;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+  color: #d4af37;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #28282d;;
+}
+
+a:active {
+  text-decoration: none;
+}
+
+.btn {
+  display: block;
+  padding: 0.7em 1em;
+  background: transparent;
+  outline: none;
+  border: 0;
+  color: #d4af37;
+  letter-spacing: 0.1em;
+  font-family: monospace;
+  font-size: 17px;
+  font-weight: bold;
+  z-index: 1;
+}
+
+.cube {
+  margin-top: 40px;
+  position: relative;
+  transition: all 0.5s;
+}
+
+.cube .bg-top {
+  position: absolute;
+  height: 10px;
+  background: #d4af37;
+  bottom: 100%;
+  left: 5px;
+  right: -5px;
+  transform: skew(-45deg, 0);
+  margin: 0;
+  transition: all 0.4s;
+}
+
+.cube .bg-top .bg-inner {
+  bottom: 0;
+}
+
+.test{
+  width: 100px;
+  height: 30px;
+}
+.cube .bg {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: 0;
+  background: #d4af37;
+  transition: all 0.4s;
+}
+
+.cube .bg-right {
+  position: absolute;
+  background: #d4af37;
+  top: -5px;
+  z-index: 0;
+  bottom: 5px;
+  width: 10px;
+  left: 100%;
+  transform: skew(0, -45deg);
+  transition: all 0.4s;
+}
+
+.cube .bg-right .bg-inner {
+  left: 0;
+}
+
+.cube .bg-inner {
+  background: #28282d;
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  
+}
+
+.cube .text {
+  position: relative;
+  transition: all 0.4s;
+}
+
+.cube .Edittext, #Edittext{
+  position: relative;
+  transition: all 0.4s;
+}
+
+.cube:hover .bg-inner {
+  background: #d4af37;
+  transition: all 0.4s;
+}
+
+.cube:hover .text {
+  color: #28282d;
+  transition: all 0.4s;
+}
+
+.cube:hover .bg-right,
+.cube:hover .bg,
+.cube:hover .bg-top {
+  background: #28282d;
+}
+
+.cube:active {
+  z-index: 9999;
+  animation: bounce 0.1s linear;
+}
+
+@keyframes bounce {
+  50% {
+    transform: scale(0.9);
+  }
+}
+
+
+.dropdowndiv{
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.text{
+  text-transform: uppercase;
+}
+
+html{
+  background-image: url(../img/background.avif);
+}
+
+.Edittext{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.cube1 {
+  margin-top: 40px;
+  position: relative;
+  transition: all 0.5s;
+}
+
+.cube1 .bg-top {
+  position: absolute;
+  height: 10px;
+  background: #d4af37;
+  bottom: 100%;
+  left: 5px;
+  right: -5px;
+  transform: skew(-45deg, 0);
+  margin: 0;
+  transition: all 0.4s;
+}
+
+.cube1 .bg-top .bg-inner {
+  bottom: 0;
+}
+
+.test{
+  width: 100px;
+  height: 30px;
+}
+.cube1 .bg {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: 0;
+  background: #d4af37;
+  transition: all 0.4s;
+}
+
+.cube1 .bg-right {
+  position: absolute;
+  background: #d4af37;
+  top: -5px;
+  z-index: 0;
+  bottom: 5px;
+  width: 10px;
+  left: 100%;
+  transform: skew(0, -45deg);
+  transition: all 0.4s;
+}
+
+.cube1 .bg-right .bg-inner {
+  left: 0;
+}
+
+.cube1 .bg-inner {
+  background: #28282d;
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  
+}
+
+.cube1 .text {
+  position: relative;
+  transition: all 0.4s;
+
+}
+
+.cube1 .Edittext, #Edittext{
+  position: relative;
+  transition: all 0.4s;
+}
+

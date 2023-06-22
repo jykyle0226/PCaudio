@@ -1,11 +1,11 @@
 .AudioDataComp{
   display: flex;
   justify-content: center;
-  align-items: center;
-  flex-direction: row;
   border: solid 1px black;
 
 }
+
+
 .EditNav{
   display: flex;
   flex-direction: row;
@@ -13,7 +13,9 @@
   align-items: center;
 }
 
-
+#edit-db{
+  margin-left: 50px;
+}
 .ADCname{
 
   text-align: left;
