@@ -10,6 +10,7 @@
 
 .slider-container .slider{
 
+  margin-top: 10px;
   position: absolute;
   z-index: 3;
   left: 50%;
@@ -24,6 +25,7 @@
   background-color: transparent;
 }
 .slider-container{
+  margin: 10px;
   position: relative;
   width: 20px;
   height: 300px;
@@ -118,13 +120,27 @@
 
 
 .container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 1px solid black; 
   margin: 10px ;
-  background-image: linear-gradient(0deg, #232323 0%, #aeaeae 100%);
+  background-image: url('../img/background.avif');
 }
 
+
+
+.testbox{
+width: 170px;
+height: 30px;
+}
+
+.test{
+  width: 170px;
+  height: 51px;
+}
 .main{
-  background-image: linear-gradient(0deg, #232323 0%, #9b9b9b 100%);
+  background-image: url('../img/background.avif');
 }
 
 .middle{
@@ -134,5 +150,16 @@
 
 }
 html{
-  background-image: linear-gradient(0deg, #000000 0%, #ecf574 100%);
+
+}
+
+.headScreen{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('../img/screen.jpeg');
+  width: 250px;
+  height: 50px;
+  margin: 10px;
+  background-size:cover;
 }

@@ -16,11 +16,16 @@ const SingerData = [
   },
   { Name: "Brian",
     dB: "-9",
-    Note: "",
+    Note: "test",
     Catagory: "Singer"
   },
   { Name: "Christine",
   dB: "-5",
+  Note: "",
+  Catagory: "Singer"
+  },
+  { Name: "Hannah",
+  dB: "-8",
   Note: "",
   Catagory: "Singer"
   }

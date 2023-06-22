@@ -47,7 +47,7 @@ const FaderDataComp = ({ Name, dB, Catagory }) => {
             className="slider"
             min="-60"
             max="20"
-            value={db}
+            value={finalVolume}
             onChange={(event) => {
               setDb(event.target.valueAsNumber);
             }}

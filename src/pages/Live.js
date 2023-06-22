@@ -18,19 +18,70 @@ const SongOptions = ["First", "Second", "Third"];
 const defaultServiceOption = ServiceOptions[0];
 const defaultSongOption = SongOptions[0];
 
+const DropdownTop = styled("div")`
+  position: absolute;
+  height: 10px;
+  background: #d4af37;
+  bottom: 100%;
+  left: 5px;
+  right: -5px;
+  transform: skew(-45deg, 0);
+  margin: 0;
+  transition: all 0.4s;
+
+`;
+const DropdownRight = styled("div")`
+  position: absolute;
+  left: 0;
+  background: #d4af37;
+  top: -5px;
+  z-index: 0;
+  bottom: 5px;
+  width: 10px;
+  left: 100%;
+  transform: skew(0, -45deg);
+  transition: all 0.4s;
+  border-bottom: 2px solid 
+`;
+const DropdownBg = styled("div")`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: 0;
+  background: #d4af37;
+  transition: all 0.4s;
+  border-bottom: 2px solid 
+`;
+const DropdownInner = styled("div")`
+  background: #28282d;
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  bottom: 0;
+  left: 0;
+
+`;
+
 const DropDownContainer = styled("div")`
-  width: 10.5em;
+  width: 100px;
+  height: 20px
   margin: 0 auto;
+  text-transform: uppercase;
+  
 `;
 
 const DropDownHeader = styled("div")`
-  margin-bottom: 0.8em;
-  padding: 0.4em 2em 0.4em 1em;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
-  font-weight: 500;
-  font-size: 1.3rem;
-  color: #3faffa;
-  background: #ffffff;
+  font-family: monospace;
+  font-size: 17px;
+  color: #d4af37;
+  background: #28282d;
+  position: relative;
+  transition: all 0.4s;
+
 `;
 
 const DropDownListContainer = styled("div")``;
@@ -38,13 +89,12 @@ const DropDownListContainer = styled("div")``;
 const DropDownList = styled("ul")`
   padding: 0;
   margin: 0;
-  padding-left: 1em;
-  background: #ffffff;
-  border: 2px solid #e5e5e5;
+  background: #28282d;
+  border: 2px solid #d4af37;
   box-sizing: border-box;
-  color: #3faffa;
+  color: #d4af37;
+  
   font-size: 1.3rem;
-  font-weight: 500;
   &:first-child {
     padding-top: 0.8em;
   }
@@ -52,12 +102,23 @@ const DropDownList = styled("ul")`
 
 const ListItem = styled("li")`
   list-style: none;
+  position: relative;
+  text-transform: uppercase;
+  transition: all 0.4s;
   margin-bottom: 0.8em;
+  
+  &:hover{
+    background: #d4af37;
+    transition: all 0.4s;
+    color: #28282d;
+    transition: all 0.4s;
+  }
 `;
 
 const Live = (props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const toggling = () => setIsOpen(!isOpen);
+  const Servicetoggling = () => setIsOpen(!isOpen);
+  const Songtoggling = () => setIsOpen(!isOpen);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSongOption, setSelectedSongOption] = useState(null);
 
@@ -91,120 +152,151 @@ const Live = (props) => {
   return (
     <div className="background">
       <div className="nav">
-        <button type="button" class="btn cube cube-hover">
-          <div class="bg-top">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg-right">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="text">
-            <a className="link" href="/">
-              Home
-            </a>
-          </div>
-        </button>
-        <button type="button" class="btn cube cube-hover">
-          <div class="bg-top">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg-right">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="text">
-            <a className="link" href="/edit">
-              Edit
-            </a>
-          </div>
-        </button>
+        <div className="homebtn">
+          <button type="button" class="btn cube cube-hover">
+            <div class="bg-top">
+              <div class="bg-inner"></div>
+            </div>
+            <div class="bg-right">
+              <div class="bg-inner"></div>
+            </div>
+            <div class="bg">
+              <div class="bg-inner"></div>
+            </div>
+            <div class="text">
+              <a className="link" href="/">
+                Home
+              </a>
+            </div>
+          </button>
+        </div>
+        <div className="editbtn">
+          <button type="button" class="btn cube cube-hover">
+            <div class="bg-top">
+              <div class="bg-inner"></div>
+            </div>
+            <div class="bg-right">
+              <div class="bg-inner"></div>
+            </div>
+            <div class="bg">
+              <div class="bg-inner"></div>
+            </div>
+            <div class="text">
+              <a className="link" href="/edit">
+                Edit
+              </a>
+            </div>
+          </button>
+        </div>
+        <div className="servicebtn">
+          <button type="button" class="btn cube cube-hover">
+            <DropdownTop class="bg-top">
+              <DropdownInner class="bg-inner"></DropdownInner>
+            </DropdownTop>
+            <DropdownRight class="bg-right">
+              <DropdownInner class="bg-inner"></DropdownInner>
+            </DropdownRight>
+            <DropdownBg class="bg">
+              <DropdownInner class="bg-inner"></DropdownInner>
+            </DropdownBg>
+            <DropDownContainer div class="text" >
+              <DropDownHeader onClick={Servicetoggling}>
+                {" "}
+                {selectedOption || "Service"}
+              </DropDownHeader>{" "}
+              {isOpen && (
+                <DropDownListContainer>
+                  <DropDownList>
+                    {options.map((option) => (
+                      <ListItem
+                        onClick={onOptionClicked(option)}
+                        key={Math.random()}
+                      >
+                        {option}
+                      </ListItem>
+                    ))}
+                  </DropDownList>
+                </DropDownListContainer>
+              )}
+            </DropDownContainer>
+          </button>
+        </div>
+        <div className="songoptionbtn">
+          <button type="button" class="btn cube cube-hover">
+            <DropdownTop>
+              <DropdownInner></DropdownInner>
+            </DropdownTop>
+            <DropdownRight>
+              <DropdownInner></DropdownInner>
+            </DropdownRight>
+            <DropdownBg>
+              <DropdownInner></DropdownInner>
+            </DropdownBg>
+            <DropDownContainer>
+              <DropDownHeader onClick={Songtoggling}>
+                {" "}
+                {selectedSongOption || "Song"}
+              </DropDownHeader>{" "}
+              {isOpen && (
+                <DropDownListContainer>
+                  <DropDownList>
+                    {Songoptions.map((songOption) => (
+                      <ListItem
+                        onClick={onSongOptionClicked(songOption)}
+                        key={Math.random()}
+                      >
+                        {songOption}
+                      </ListItem>
+                    ))}
+                  </DropDownList>
+                </DropDownListContainer>
+              )}
+            </DropDownContainer>
+          </button>
+        </div>
       </div>
-      <div className="EditNav">
-        <DropDownContainer>
-          <DropDownHeader onClick={toggling}>
-            {" "}
-            {selectedOption || "Service"}
-          </DropDownHeader>{" "}
-          {isOpen && (
-            <DropDownListContainer>
-              <DropDownList>
-                {options.map((option) => (
-                  <ListItem
-                    onClick={onOptionClicked(option)}
-                    key={Math.random()}
-                  >
-                    {option}
-                  </ListItem>
-                ))}
-              </DropDownList>
-            </DropDownListContainer>
-          )}
-        </DropDownContainer>
-        <DropDownContainer>
-          <DropDownHeader onClick={toggling}>
-            {" "}
-            {selectedSongOption || "Song Option"}
-          </DropDownHeader>{" "}
-          {isOpen && (
-            <DropDownListContainer>
-              <DropDownList>
-                {Songoptions.map((songOption) => (
-                  <ListItem
-                    onClick={onSongOptionClicked(songOption)}
-                    key={Math.random()}
-                  >
-                    {songOption}
-                  </ListItem>
-                ))}
-              </DropDownList>
-            </DropDownListContainer>
-          )}
-        </DropDownContainer>
-      </div>
+      <div className="EditNav"></div>
 
       <div className="FaderDiv">
         <div>
           <div className="Upper">
             <div className="DCAfader">
-              <div className="container" >
-                <div >
+              <div className="container">
+                <div className="headScreen">
                   <h1 id="font">DCA</h1>
                 </div>
                 <div id="DCAfader">{DCAfader}</div>
               </div>
               <div className="Stemfader">
                 <div className="container">
-                  <div>
+                  <div className="headScreen">
                     <h1 id="font">Stem</h1>
                   </div>
                   <div id="Stemfader">{StemFader}</div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="Lower">
-            <div className="Singerfader">
-              <div  className="container">
-                <div>
+              <div className="Singerfader">
+              <div className="container">
+                <div className="headScreen">
                   <h1 id="font">Singers</h1>
                 </div>
                 <div id="Singerfader">{SingerFader}</div>
               </div>
 
               <div className="Instfader">
-                <div  className="container">
-                  <div>
+                <div className="container">
+                  <div className="headScreen">
                     <h1 id="font">Instrumentals</h1>
                   </div>
                   <div id="Instfader">{InstFader}</div>
                 </div>
               </div>
             </div>
+            </div>
+            
+          </div>
+          <div className="Lower">
+            
           </div>
         </div>
       </div>
