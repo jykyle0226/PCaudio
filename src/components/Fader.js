@@ -7,7 +7,7 @@ const Fader = (props) => {
   return (
     <div>
       <div>
-        <FaderDataComp Name={props.Name} dB={props.dB} Note={props.Note} />
+        <FaderDataComp Name={props.Name} dB={props.dB} Note={props.Note} Catagory={props.Catagory} />
       </div>
     </div>
   );

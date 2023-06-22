@@ -15,7 +15,12 @@ const DCADataComp = ({ Name, dB, Note }) => {
       </div>
 
       <h1 className="ADCnote">{Note}</h1>
+
+      <div>
+        
+      </div>
     </div>
+
   );
 };
 

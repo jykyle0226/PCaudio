@@ -1,13 +1,16 @@
 const StemData = [
   { Name: "StemBass",
   dB: "",
-  Note: ""
+  Note: "",
+  Catagory: "Stem"
   },{ Name: "StemGtr",
   dB: "-12",
-  Note: ""
+  Note: "",
+  Catagory: "Stem"
   },{ Name: "StemKeys",
   dB: "-12",
-  Note: ""
+  Note: "",
+  Catagory: "Stem"
   },
   ]
   

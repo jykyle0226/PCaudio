@@ -1,23 +1,28 @@
 const InstData = [
   { Name: "Nord",
   dB: "-2",
-  Note: ""
+  Note: "",
+  Catagory: "Inst"
   },
   { Name: "Elec",
   dB: "-5.6",
-  Note: ""
+  Note: "",
+  Catagory: "Inst"
   },
   { Name: "Agt",
-  dB: "-7.2",
-  Note: ""
+  dB: "",
+  Note: "",
+  Catagory: "Inst"
   },
   { Name: "Bass",
   dB: "-5",
-  Note: ""
+  Note: "",
+  Catagory: "Inst"
   },
   { Name: "Drum",
   dB: "-10",
-  Note: ""
+  Note: "",
+  Catagory: "Inst"
   },
   ]
   
