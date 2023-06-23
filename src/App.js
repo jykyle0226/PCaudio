@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import Home from '../src/pages/Home'
 import Edit from '../src/pages/Edit'
 import Live from '../src/pages/Live'
+import Login from '../src/pages/LogIn'
+import Callback from '../src/pages/CallBack'
+import { Callbacks } from 'jquery';
+import API from './pages/API';
 
 
 function App() {
@@ -21,7 +25,13 @@ function App() {
       <Route exact path="/Live">
         <Live />
       </Route>
-      
+
+      <Route exact path='/login'>
+          <Login></Login>
+      </Route>
+      <Route exact path='/oauth/callback'>
+          <API></API>
+      </Route>
     </div>
   );
 }
