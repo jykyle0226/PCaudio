@@ -50,18 +50,14 @@ function API() {
     <div className="App">
       <header className="App-header">
         <h1>API</h1>
-        {!token ? (
+
           <a
             className="button-68"
             href={`https://api.planningcenteronline.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=people registrations check_ins calendar giving groups services`}
           >
             Login
           </a>
-        ) : (
-          <button className="button-68" onClick={logout}>
-            Logout
-          </button>
-        )}
+        
 
 
       </header>
