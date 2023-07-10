@@ -36,17 +36,44 @@ function API() {
 
   const FetchData = async (e) => {
     e.preventDefault();
-    const { data } = await axios.post(`https://api.planningcenteronline.com/oauth/token`, {
-      body: {
-        grant_type: "authorization_code",
-        code: "CODE_FROM_STEP_2",
-        client_id: "CLIENT_ID",
-        client_secret: "CLIENT_SECRET",
-        redirect_uri: "https://example.com/auth/complete",
-      },
-    });
+    const form = new FormData();
 
+    form.append("grant_type", "authorization_code");
+    form.append("code", token);
+    form.append("client_id", CLIENT_ID);
+    form.append("client_secret", CLIENT_SECRET);
+    form.append("redirect_uri", REDIRECT_URI);
+    const { data } = await axios.post(
+      `https://api.planningcenteronline.com/oauth/token`,
+      form
+    );
+  };
+
+  const [plans, setPlans] = useState("");
+
+  const searchPlans = async (e) => {
+    e.preventDefault();
+    const { data } = await axios.get(
+      "https://api.planningcenteronline.com/services/v2/service_types/777403/plans",
+      {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+        },
+      }
+    );
     console.log(data);
+    setPlans(data.plans.item);
+  };
+
+  const renderServices = () => {
+    return plans.map((plan) => (
+      <div key={plan.id}>
+        {plan.name}
+        <div>
+          <p>Services</p>
+        </div>
+      </div>
+    ));
   };
 
   return (
@@ -66,14 +93,27 @@ function API() {
           </button>
         )}
         <div>
-          <div className="card text-center m-3">
-            <h5 className="card-header">
-              GET Request with Bearer Token Authorization Header
-            </h5>
-            <div className="card-body">Product name:</div>
+          <div>
+            <div>Product:</div>
             <button onClick={FetchData}> button </button>
           </div>
         </div>
+        {token ? (
+          <form onSubmit={searchPlans}>
+            <input
+              className="input"
+              type="text"
+              onChange={(e) => setPlans(e.target.value)}
+            />
+            <button className="button-68" type={"submit"}>
+              Search
+            </button>
+          </form>
+        ) : (
+          <h2>Please login</h2>
+        )}
+
+        {/* {renderServices()} */}
       </header>
     </div>
   );
