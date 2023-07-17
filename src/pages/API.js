@@ -47,15 +47,14 @@ function API() {
       `https://api.planningcenteronline.com/oauth/token`,
       form
     );
-    console.log(data)
+    console.log(data);
     const accessToken = data.access_token;
-    console.log(data.access_token)
+    console.log(data.access_token);
     setAccessToken(accessToken);
-    console.log(accessToken)
+    console.log(accessToken);
   };
 
-  localStorage.setItem('AccessToken', accessToken)
-
+  localStorage.setItem("AccessToken", accessToken);
 
   const [plans, setPlans] = useState("");
 
@@ -128,9 +127,9 @@ function API() {
         <button onClick={searchPlans}>button2</button>
         <button onClick={renderServices}>button3</button>
         <button onClick={consoleToday}>button4</button>
-          <div>
-            <a href="/live">go</a>
-          </div>
+        <div>
+          <a href="/live">go</a>
+        </div>
         <ul>
           <li>{inputDates}</li>
         </ul>
