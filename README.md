@@ -13,5 +13,5 @@ React | API
 
 ## Getting Started
 
-[click here]() deployed page not available yet...
+[x]() deployed page not available yet...
 
