@@ -6,7 +6,7 @@ React | API
 
 ## Screenshot
 ![Screen Shot 2022-06-06 at 12 14 35 AM](https://i.imgur.com/YIVECQW.png)
-![[Screen Shot 2022-06-06 at 12 14 44 AM](https://i.imgur.com/inQJSWW.png](https://i.imgur.com/AHfacNW.png))
+![[Screen Shot 2022-06-06 at 12 14 44 AM](https://i.imgur.com/inQJSWW.png](https://i.imgur.com/AHfacNW.png)
 ![Screen Shot 2022-06-06 at 12 14 40 AM](https://i.imgur.com/8xeu0JZ.png)
 
 
