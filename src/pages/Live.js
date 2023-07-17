@@ -1,4 +1,6 @@
 import Fader from "../components/Fader";
+import moment from 'moment';
+
 import FaderDataComp from "../components/FaderDataComp";
 import styled from "styled-components";
 import { useState } from "react";
@@ -138,7 +140,21 @@ const Live = (props) => {
   const StemFader = StemArr.map((ele, index) => {
     return <Fader {...ele} key={index} />;
   });
-
+  const [test1, setTest1] = useState()
+  const [test, setTest] = useState()
+  const [test3, setTest3] = useState()
+  const testing = () => {
+    console.log(selectedSongs)
+    console.log(test)
+    console.log(test1)
+    console.log(inputDates[7])
+    console.log(id)
+    if (test === inputDates[7]){
+      console.log(true)
+    } else {
+      console.log(false)
+    }
+  }
   const [id, setId] = useState("");
   const [songs, setSongs] = useState("");
   const findSongs = async (e) => {
@@ -151,6 +167,7 @@ const Live = (props) => {
       }
     );
     const songsData = data.data;
+    setTest3(songsData)
     const serviceOrders = [];
     songsData.forEach((songTitle) => {
       const songAttributes = songTitle.attributes.title;
@@ -162,19 +179,26 @@ const Live = (props) => {
     setSelectedSongs(selectedSongs)
     console.log(selectedSongs)
   };
+
   const [ selectedSongs, setSelectedSongs ] = useState("")
   const onOptionClicked = (value) => () => {
+    const dateStr = value
+    const formattedDate = moment.utc(dateStr).format('MMMM D, YYYY');
+
+  
+
+    setTest1(value)
+    setTest(formattedDate)
     setSelectedOption(value);
     setIsOpen(false);
     plans.forEach((plan) => {
-      if (value === plan.attributes.dates) {
+      if (formattedDate === plan.attributes.dates) {
         setId(plan.id);
         console.log(id);
         findSongs();
       }
     });
   };
-
   const onSongOptionClicked = (value) => () => {
     console.log("yay");
   };
@@ -408,8 +432,9 @@ const Live = (props) => {
       <div>
         <button onClick={checkToken}>button 1</button>
         <button onClick={searchPlans}>button 2</button>
-        <button onClick={renderServices}>button4</button>
-        <button onClick={changeDateFormat}>button 3</button>
+        <button onClick={renderServices}>button3</button>
+        <button onClick={changeDateFormat}>button 4</button>
+        <button onClick={testing}>button 5</button>
       </div>
     </div>
   );

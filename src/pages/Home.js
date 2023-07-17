@@ -6,6 +6,8 @@ const Home = (props) => {
         <h2>Log in</h2>
       </a>
       <a href="/live">
+
+        
         <h2>Live Page</h2>
       </a>
       <a href="/edit">
