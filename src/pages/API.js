@@ -26,6 +26,8 @@ function API() {
   const AUTH_ENDPOINT = `https://api.planningcenteronline.com/oauth/token?grant_type=authorization_code&code=${token}&redirect_uri=${REDIRECT_URI}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`;
 
   const logoutRedirect = () => {
+    setToken("");
+    window.localStorage.removeItem("code");
     window.location.href = "/login";
   };
   const logout = () => {

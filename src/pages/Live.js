@@ -116,7 +116,9 @@ const ListItem = styled("li")`
 const Live = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSongOpen, setSongIsOpen] = useState(false);
-  const Servicetoggling = () => setIsOpen(!isOpen);
+  const Servicetoggling = () => {
+    setIsOpen(!isOpen)
+  };
   const Songtoggling = () => setSongIsOpen(!isSongOpen);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSongOption, setSelectedSongOption] = useState(null);
@@ -155,21 +157,12 @@ const Live = (props) => {
       serviceOrders.push(songAttributes);
     }, setSongs(serviceOrders));
     console.log(songs);
+    const selectedSongs = songs.slice(3, 6)
+    console.log(selectedSongs)
+    setSelectedSongs(selectedSongs)
+    console.log(selectedSongs)
   };
-
-  //     var valuesArr = ["v1","v2","v3","v4","v5"],
-  //     removeValFromIndex = [0,2,4];
-
-  // for (var i = removeValFromIndex.length -1; i >= 0; i--)
-  //    valuesArr.splice(removeValFromIndex[i],1);
-  //   function GFG_Fun() {
-  //     const indexes = [0, 1];
-
-  //     arr = arr.filter((value, index) => !indexes.includes(index));
-
-  //     console.log(arr);
-  // }
-
+  const [ selectedSongs, setSelectedSongs ] = useState("")
   const onOptionClicked = (value) => () => {
     setSelectedOption(value);
     setIsOpen(false);
@@ -213,6 +206,35 @@ const Live = (props) => {
   useEffect(() => {
     console.log(inputDates);
   }, [inputDates]);
+  const [ reformed, setReformed] = useState("")
+  const changeDateFormat = () => {
+    const arrOfDates = []
+    inputDates.forEach((services) => {
+      const dateStr = services
+      const date = new Date(dateStr);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      console.log(formattedDate)
+      arrOfDates.push(formattedDate)
+    })
+    console.log(arrOfDates)
+    setReformed(arrOfDates)
+    console.log(reformed)
+    const getClosestDates = () => {
+      const today = new Date();
+      const upcomingDates = reformed.filter(date => new Date(date) >= today);
+      const sortedDates = upcomingDates.sort((a, b) => new Date(a) - new Date(b));
+      return sortedDates.slice(0, 3);
+    };
+
+    const closestService = getClosestDates();
+    console.log(closestService)
+    setClosestDates(closestService)
+  }
+
+
 
   const searchPlans = async (e) => {
     e.preventDefault();
@@ -293,7 +315,7 @@ const Live = (props) => {
               {isOpen && (
                 <DropDownListContainer>
                   <DropDownList>
-                    {inputDates.map((option) => (
+                    {closestDates.map((option) => (
                       <ListItem
                         onClick={onOptionClicked(option)}
                         key={Math.random()}
@@ -326,7 +348,7 @@ const Live = (props) => {
               {isSongOpen && (
                 <DropDownListContainer>
                   <DropDownList>
-                    {songs.map((song) => (
+                    {selectedSongs.map((song) => (
                       <ListItem
                         onClick={onSongOptionClicked(song)}
                         key={Math.random()}
@@ -386,7 +408,8 @@ const Live = (props) => {
       <div>
         <button onClick={checkToken}>button 1</button>
         <button onClick={searchPlans}>button 2</button>
-        <button onClick={renderServices}>button 3</button>
+        <button onClick={renderServices}>button4</button>
+        <button onClick={changeDateFormat}>button 3</button>
       </div>
     </div>
   );
