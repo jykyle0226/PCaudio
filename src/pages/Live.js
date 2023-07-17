@@ -136,14 +136,56 @@ const Live = (props) => {
   const StemFader = StemArr.map((ele, index) => {
     return <Fader {...ele} key={index} />;
   });
+
+  const [ id, setId ] = useState('')
+  const [ songs, setSongs ] = useState('')
+  const findSongs = async(e) => {
+    const {data} = await axios.get(
+      `https://api.planningcenteronline.com/services/v2/service_types/777403/plans/${id}/items`,
+      {
+        headers: {
+          Authorization: `Bearer ${AccessToken}`,
+        }
+      }
+    )
+    const songsData = (data.data)
+    const serviceOrders = []
+    songsData.forEach((songTitle) => {
+      const songAttributes = songTitle.attributes.title
+      serviceOrders.push(songAttributes)
+      
+    }, setSongs(serviceOrders))
+    console.log(songs)
+    }
+
+//     var valuesArr = ["v1","v2","v3","v4","v5"],
+//     removeValFromIndex = [0,2,4];    
+
+// for (var i = removeValFromIndex.length -1; i >= 0; i--)
+//    valuesArr.splice(removeValFromIndex[i],1);
+//   function GFG_Fun() {
+//     const indexes = [0, 1];
+ 
+//     arr = arr.filter((value, index) => !indexes.includes(index));
+ 
+//     console.log(arr);
+// }
+
   const onOptionClicked = (value) => () => {
     setSelectedOption(value);
     setIsOpen(false);
+        plans.forEach((plan) => {
+      if(value === plan.attributes.dates ){
+        setId(plan.id)
+        console.log(id)
+        findSongs()
+      }
+    })
   };
 
   const onSongOptionClicked = (value) => () => {
-    setSelectedSongOption(value);
-    setSongIsOpen(false);
+    console.log('yay')
+    
   };
 
   const AccessToken = localStorage.getItem("AccessToken");
@@ -166,8 +208,10 @@ const Live = (props) => {
       const dateList = plan.attributes.dates;
       allDates.push(dateList);
     });
+    console.log(plans)
     setInputDates(allDates);
   };
+
 
   useEffect(() => {
     console.log(inputDates);
@@ -285,12 +329,12 @@ const Live = (props) => {
               {isSongOpen && (
                 <DropDownListContainer>
                   <DropDownList>
-                    {Songoptions.map((songOption) => (
+                    {songs.map((song) => (
                       <ListItem
-                        onClick={onSongOptionClicked(songOption)}
+                        onClick={onSongOptionClicked(song)}
                         key={Math.random()}
                       >
-                        {songOption}
+                        {song}
                       </ListItem>
                     ))}
                   </DropDownList>
