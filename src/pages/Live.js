@@ -3,16 +3,17 @@ import FaderDataComp from "../components/FaderDataComp";
 import styled from "styled-components";
 import { useState } from "react";
 import DCAArr from "../DCAData";
+import axios from "axios";
 import InstArr from "../InstData";
 import SingerArr from "../SingerData";
 import StemArr from "../StemData";
-
+import API from "../pages/API";
 import DCA from "../components/DCA";
 import "../Style/Fader.css";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import "../Style/style.css";
-
+import { useEffect } from "react";
 const ServiceOptions = ["W&P", "Sunday Service"];
 const SongOptions = ["First", "Second", "Third"];
 const defaultServiceOption = ServiceOptions[0];
@@ -28,7 +29,6 @@ const DropdownTop = styled("div")`
   transform: skew(-45deg, 0);
   margin: 0;
   transition: all 0.4s;
-
 `;
 const DropdownRight = styled("div")`
   position: absolute;
@@ -41,7 +41,7 @@ const DropdownRight = styled("div")`
   left: 100%;
   transform: skew(0, -45deg);
   transition: all 0.4s;
-  border-bottom: 2px solid 
+  border-bottom: 2px solid;
 `;
 const DropdownBg = styled("div")`
   position: absolute;
@@ -51,7 +51,7 @@ const DropdownBg = styled("div")`
   right: 0;
   background: #d4af37;
   transition: all 0.4s;
-  border-bottom: 2px solid 
+  border-bottom: 2px solid;
 `;
 const DropdownInner = styled("div")`
   background: #28282d;
@@ -62,7 +62,6 @@ const DropdownInner = styled("div")`
   bottom: 2px;
   bottom: 0;
   left: 0;
-
 `;
 
 const DropDownContainer = styled("div")`
@@ -81,7 +80,6 @@ const DropDownHeader = styled("div")`
   background: #28282d;
   position: relative;
   transition: all 0.4s;
-
 `;
 
 const DropDownListContainer = styled("div")``;
@@ -93,7 +91,7 @@ const DropDownList = styled("ul")`
   border: 2px solid #d4af37;
   box-sizing: border-box;
   color: #d4af37;
-  
+
   font-size: 1.3rem;
   &:first-child {
     padding-top: 0.8em;
@@ -106,8 +104,8 @@ const ListItem = styled("li")`
   text-transform: uppercase;
   transition: all 0.4s;
   margin-bottom: 0.8em;
-  
-  &:hover{
+
+  &:hover {
     background: #d4af37;
     transition: all 0.4s;
     color: #28282d;
@@ -148,6 +146,51 @@ const Live = (props) => {
     setSongIsOpen(false);
   };
 
+  const AccessToken = localStorage.getItem("AccessToken");
+
+  const checkToken = () => {
+    console.log(AccessToken);
+  };
+
+  const [plans, setPlans] = useState("");
+  const [inputDates, setInputDates] = useState([]);
+  const [closestDates, setClosestDates] = useState([]);
+
+  const renderServices = () => {
+    if (!Array.isArray(plans)) {
+      console.error("plans is not an array");
+      return;
+    }
+    const allDates = [];
+    plans.forEach((plan) => {
+      const dateList = plan.attributes.dates;
+      allDates.push(dateList);
+    });
+    setInputDates(allDates);
+  };
+
+  useEffect(() => {
+    console.log(inputDates);
+  }, [inputDates]);
+
+  const searchPlans = async (e) => {
+    e.preventDefault();
+    const { data } = await axios.get(
+      "https://api.planningcenteronline.com/services/v2/service_types/777403/plans",
+      {
+        headers: {
+          Authorization: `Bearer ${AccessToken}`,
+        },
+        params: {
+          order: "-sort_date",
+          per_page: "10",
+        },
+      }
+    );
+    setPlans(data.data);
+    console.log(data.data);
+    console.log(AccessToken);
+  };
 
   const options = ServiceOptions;
   const Songoptions = SongOptions;
@@ -201,7 +244,7 @@ const Live = (props) => {
             <DropdownBg class="bg">
               <DropdownInner class="bg-inner"></DropdownInner>
             </DropdownBg>
-            <DropDownContainer div class="text" >
+            <DropDownContainer div class="text">
               <DropDownHeader onClick={Servicetoggling}>
                 {" "}
                 {selectedOption || "Service"}
@@ -209,7 +252,7 @@ const Live = (props) => {
               {isOpen && (
                 <DropDownListContainer>
                   <DropDownList>
-                    {options.map((option) => (
+                    {inputDates.map((option) => (
                       <ListItem
                         onClick={onOptionClicked(option)}
                         key={Math.random()}
@@ -278,31 +321,32 @@ const Live = (props) => {
                 </div>
               </div>
               <div className="Singerfader">
-              <div className="container">
-                <div className="headScreen">
-                  <h1 id="font">Singers</h1>
-                </div>
-                <div id="Singerfader">{SingerFader}</div>
-              </div>
-
-              <div className="Instfader">
                 <div className="container">
                   <div className="headScreen">
-                    <h1 id="font">Instrumentals</h1>
+                    <h1 id="font">Singers</h1>
                   </div>
-                  <div id="Instfader">{InstFader}</div>
+                  <div id="Singerfader">{SingerFader}</div>
+                </div>
+
+                <div className="Instfader">
+                  <div className="container">
+                    <div className="headScreen">
+                      <h1 id="font">Instrumentals</h1>
+                    </div>
+                    <div id="Instfader">{InstFader}</div>
+                  </div>
                 </div>
               </div>
             </div>
-            </div>
-            
           </div>
-          <div className="Lower">
-            
-          </div>
+          <div className="Lower"></div>
         </div>
       </div>
-      <div></div>
+      <div>
+        <button onClick={checkToken}>button 1</button>
+        <button onClick={searchPlans}>button 2</button>
+        <button onClick={renderServices}>button 3</button>
+      </div>
     </div>
   );
 };

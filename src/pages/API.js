@@ -8,7 +8,7 @@ function API() {
   const REDIRECT_URI = "http://localhost:3000/oauth/callback";
   const CLIENT_SECRET =
     "ddb28c33d638d5368301517741b24857f545bdc02e5af0cc8d9ce2d152c8ef56";
-
+  const [accessToken, setAccessToken] = useState("");
   const [token, setToken] = useState("");
 
   useEffect(() => {
@@ -47,7 +47,15 @@ function API() {
       `https://api.planningcenteronline.com/oauth/token`,
       form
     );
+    console.log(data)
+    const accessToken = data.access_token;
+    console.log(data.access_token)
+    setAccessToken(accessToken);
+    console.log(accessToken)
   };
+
+  localStorage.setItem('AccessToken', accessToken)
+
 
   const [plans, setPlans] = useState("");
 
@@ -57,24 +65,43 @@ function API() {
       "https://api.planningcenteronline.com/services/v2/service_types/777403/plans",
       {
         headers: {
-          Authorization: `Bearer ${data.access_token}`,
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: {
+          order: "-sort_date",
+          per_page: "20",
         },
       }
     );
-    console.log(data);
-    setPlans(data.plans.item);
+    setPlans(data.data);
+    console.log(data.data);
+    console.log(accessToken);
   };
 
-  const renderServices = () => {
-    return plans.map((plan) => (
-      <div key={plan.id}>
-        {plan.name}
-        <div>
-          <p>Services</p>
-        </div>
-      </div>
-    ));
+  const today = new Date();
+
+  const consoleToday = () => {
+    console.log(today);
   };
+  const [inputDates, setInputDates] = useState([]);
+  const [closestDates, setClosestDates] = useState([]);
+
+  const renderServices = () => {
+    if (!Array.isArray(plans)) {
+      console.error("plans is not an array");
+      return;
+    }
+    const allDates = [];
+    plans.forEach((plan) => {
+      const dateList = plan.attributes.dates;
+      allDates.push(dateList);
+    });
+    setInputDates(allDates);
+  };
+
+  useEffect(() => {
+    console.log(inputDates);
+  }, [inputDates]);
 
   return (
     <div className="App">
@@ -98,22 +125,15 @@ function API() {
             <button onClick={FetchData}> button </button>
           </div>
         </div>
-        {token ? (
-          <form onSubmit={searchPlans}>
-            <input
-              className="input"
-              type="text"
-              onChange={(e) => setPlans(e.target.value)}
-            />
-            <button className="button-68" type={"submit"}>
-              Search
-            </button>
-          </form>
-        ) : (
-          <h2>Please login</h2>
-        )}
-
-        {/* {renderServices()} */}
+        <button onClick={searchPlans}>button2</button>
+        <button onClick={renderServices}>button3</button>
+        <button onClick={consoleToday}>button4</button>
+          <div>
+            <a href="/live">go</a>
+          </div>
+        <ul>
+          <li>{inputDates}</li>
+        </ul>
       </header>
     </div>
   );
