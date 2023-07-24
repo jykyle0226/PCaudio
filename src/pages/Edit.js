@@ -2,14 +2,16 @@ import DCA from "../components/DCA";
 import DCADataComp from "../components/DCADataComp";
 import DCAArr from "../DCAData";
 import InstArr from "../InstData";
+import axios from "axios";
 import SingerArr from "../SingerData";
 import StemArr from "../StemData";
 import "../Style/AudioComp.css";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import styled from "styled-components";
+import moment from 'moment';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Edit = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,15 +20,6 @@ const Edit = (props) => {
   const Songtoggling = () => setSongIsOpen(!isSongOpen);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSongOption, setSelectedSongOption] = useState(null);
-  const onOptionClicked = (value) => () => {
-    setSelectedOption(value);
-    setIsOpen(false);
-  };
-
-  const onSongOptionClicked = (value) => () => {
-    setSelectedSongOption(value);
-    setSongIsOpen(false);
-  };
 
 
   const DCAdata = DCAArr.map((ele, index) => {
@@ -137,6 +130,148 @@ const Edit = (props) => {
       color: #28282d;
     }
   `;
+
+
+  const [test1, setTest1] = useState()
+  const [test, setTest] = useState()
+  const [test3, setTest3] = useState()
+  const testing = () => {
+    console.log(selectedSongs)
+    console.log(test)
+    console.log(test1)
+    console.log(inputDates[7])
+    console.log(id)
+    if (test === inputDates[7]){
+      console.log(true)
+    } else {
+      console.log(false)
+    }
+  }
+
+  const [id, setId] = useState("");
+  const [songs, setSongs] = useState("");
+  const findSongs = async (e) => {
+    const { data } = await axios.get(
+      `https://api.planningcenteronline.com/services/v2/service_types/777403/plans/${id}/items`,
+      {
+        headers: {
+          Authorization: `Bearer ${AccessToken}`,
+        },
+      }
+    );
+    const songsData = data.data;
+    setTest3(songsData)
+    const serviceOrders = [];
+    songsData.forEach((songTitle) => {
+      const songAttributes = songTitle.attributes.title;
+      serviceOrders.push(songAttributes);
+    }, setSongs(serviceOrders));
+    console.log(songs);
+    const selectedSongs = songs.slice(3, 6)
+    console.log(selectedSongs)
+    setSelectedSongs(selectedSongs)
+    console.log(selectedSongs)
+  };
+
+  const [ selectedSongs, setSelectedSongs ] = useState("")
+  const onOptionClicked = (value) => () => {
+    const dateStr = value
+    const formattedDate = moment.utc(dateStr).format('MMMM D, YYYY');
+
+  
+
+    setTest1(value)
+    setTest(formattedDate)
+    setSelectedOption(value);
+    setIsOpen(false);
+    plans.forEach((plan) => {
+      if (formattedDate === plan.attributes.dates) {
+        setId(plan.id);
+        console.log(id);
+        findSongs();
+      }
+    });
+  };
+  const onSongOptionClicked = (value) => () => {
+    console.log("yay");
+  };
+
+  const AccessToken = localStorage.getItem("AccessToken");
+
+  const checkToken = () => {
+    console.log(AccessToken);
+  };
+
+  const [plans, setPlans] = useState("");
+  const [inputDates, setInputDates] = useState([]);
+  const [closestDates, setClosestDates] = useState([]);
+
+  const renderServices = () => {
+    if (!Array.isArray(plans)) {
+      console.error("plans is not an array");
+      return;
+    }
+    const allDates = [];
+    plans.forEach((plan) => {
+      const dateList = plan.attributes.dates;
+      allDates.push(dateList);
+    });
+    console.log(plans);
+    setInputDates(allDates);
+  };
+
+  useEffect(() => {
+    console.log(inputDates);
+  }, [inputDates]);
+  const [ reformed, setReformed] = useState("")
+  const changeDateFormat = () => {
+    const arrOfDates = []
+    inputDates.forEach((services) => {
+      const dateStr = services
+      const date = new Date(dateStr);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      console.log(formattedDate)
+      arrOfDates.push(formattedDate)
+    })
+    console.log(arrOfDates)
+    setReformed(arrOfDates)
+    console.log(reformed)
+    const getClosestDates = () => {
+      const today = new Date();
+      const upcomingDates = reformed.filter(date => new Date(date) >= today);
+      const sortedDates = upcomingDates.sort((a, b) => new Date(a) - new Date(b));
+      return sortedDates.slice(0, 3);
+    };
+
+    const closestService = getClosestDates();
+    console.log(closestService)
+    setClosestDates(closestService)
+  }
+
+
+
+  const searchPlans = async (e) => {
+    e.preventDefault();
+    const { data } = await axios.get(
+      "https://api.planningcenteronline.com/services/v2/service_types/777403/plans",
+      {
+        headers: {
+          Authorization: `Bearer ${AccessToken}`,
+        },
+        params: {
+          order: "-sort_date",
+          per_page: "20",
+        },
+      }
+    );
+    setPlans(data.data);
+    console.log(data.data);
+    console.log(AccessToken);
+  };
+
   const options = ServiceOptions;
   const Songoptions = SongOptions;
 
@@ -181,16 +316,16 @@ const Edit = (props) => {
         </div>
         <div className="servicebtn">
           <button type="button" class="btn cube cube-hover">
-            <DropdownTop>
-              <DropdownInner></DropdownInner>
+            <DropdownTop class="bg-top">
+              <DropdownInner class="bg-inner"></DropdownInner>
             </DropdownTop>
-            <DropdownRight>
-              <DropdownInner></DropdownInner>
+            <DropdownRight class="bg-right">
+              <DropdownInner class="bg-inner"></DropdownInner>
             </DropdownRight>
-            <DropdownBg>
-              <DropdownInner></DropdownInner>
+            <DropdownBg class="bg">
+              <DropdownInner class="bg-inner"></DropdownInner>
             </DropdownBg>
-            <DropDownContainer div class="text" >
+            <DropDownContainer div class="text">
               <DropDownHeader onClick={Servicetoggling}>
                 {" "}
                 {selectedOption || "Service"}
@@ -198,7 +333,7 @@ const Edit = (props) => {
               {isOpen && (
                 <DropDownListContainer>
                   <DropDownList>
-                    {options.map((option) => (
+                    {closestDates.map((option) => (
                       <ListItem
                         onClick={onOptionClicked(option)}
                         key={Math.random()}
@@ -231,12 +366,12 @@ const Edit = (props) => {
               {isSongOpen && (
                 <DropDownListContainer>
                   <DropDownList>
-                    {Songoptions.map((songOption) => (
+                    {selectedSongs.map((song) => (
                       <ListItem
-                        onClick={onSongOptionClicked(songOption)}
+                        onClick={onSongOptionClicked(song)}
                         key={Math.random()}
                       >
-                        {songOption}
+                        {song}
                       </ListItem>
                     ))}
                   </DropDownList>
@@ -326,6 +461,13 @@ const Edit = (props) => {
         
         
       </section>
+      <div>
+        <button onClick={checkToken}>button 1</button>
+        <button onClick={searchPlans}>button 2</button>
+        <button onClick={renderServices}>button3</button>
+        <button onClick={changeDateFormat}>button 4</button>
+        <button onClick={testing}>button 5</button>
+      </div>
     </div>
   );
 };

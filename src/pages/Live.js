@@ -1,5 +1,5 @@
 import Fader from "../components/Fader";
-import moment from 'moment';
+import moment from "moment";
 
 import FaderDataComp from "../components/FaderDataComp";
 import styled from "styled-components";
@@ -119,7 +119,7 @@ const Live = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSongOpen, setSongIsOpen] = useState(false);
   const Servicetoggling = () => {
-    setIsOpen(!isOpen)
+    setIsOpen(!isOpen);
   };
   const Songtoggling = () => setSongIsOpen(!isSongOpen);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -140,21 +140,21 @@ const Live = (props) => {
   const StemFader = StemArr.map((ele, index) => {
     return <Fader {...ele} key={index} />;
   });
-  const [test1, setTest1] = useState()
-  const [test, setTest] = useState()
-  const [test3, setTest3] = useState()
+  const [test1, setTest1] = useState();
+  const [test, setTest] = useState();
+  const [test3, setTest3] = useState();
   const testing = () => {
-    console.log(selectedSongs)
-    console.log(test)
-    console.log(test1)
-    console.log(inputDates[7])
-    console.log(id)
-    if (test === inputDates[7]){
-      console.log(true)
+    console.log(selectedSongs);
+    console.log(test);
+    console.log(test1);
+    console.log(inputDates[7]);
+    console.log(id);
+    if (test === inputDates[7]) {
+      console.log(true);
     } else {
-      console.log(false)
+      console.log(false);
     }
-  }
+  };
   const [id, setId] = useState("");
   const [songs, setSongs] = useState("");
   const findSongs = async (e) => {
@@ -167,28 +167,26 @@ const Live = (props) => {
       }
     );
     const songsData = data.data;
-    setTest3(songsData)
+    setTest3(songsData);
     const serviceOrders = [];
     songsData.forEach((songTitle) => {
       const songAttributes = songTitle.attributes.title;
       serviceOrders.push(songAttributes);
     }, setSongs(serviceOrders));
     console.log(songs);
-    const selectedSongs = songs.slice(3, 6)
-    console.log(selectedSongs)
-    setSelectedSongs(selectedSongs)
-    console.log(selectedSongs)
+    const selectedSongs = songs.slice(3, 6);
+    console.log(selectedSongs);
+    setSelectedSongs(selectedSongs);
+    console.log(selectedSongs);
   };
 
-  const [ selectedSongs, setSelectedSongs ] = useState("")
+  const [selectedSongs, setSelectedSongs] = useState("");
   const onOptionClicked = (value) => () => {
-    const dateStr = value
-    const formattedDate = moment.utc(dateStr).format('MMMM D, YYYY');
+    const dateStr = value;
+    const formattedDate = moment.utc(dateStr).format("MMMM D, YYYY");
 
-  
-
-    setTest1(value)
-    setTest(formattedDate)
+    setTest1(value);
+    setTest(formattedDate);
     setSelectedOption(value);
     setIsOpen(false);
     plans.forEach((plan) => {
@@ -213,7 +211,70 @@ const Live = (props) => {
   const [inputDates, setInputDates] = useState([]);
   const [closestDates, setClosestDates] = useState([]);
 
-  const renderServices = () => {
+  // const renderServices = () => {
+  //   if (!Array.isArray(plans)) {
+  //     console.error("plans is not an array");
+  //     return;
+  //   }
+  //   const allDates = [];
+  //   plans.forEach((plan) => {
+  //     const dateList = plan.attributes.dates;
+  //     allDates.push(dateList);
+  //   });
+  //   console.log(plans);
+  //   setInputDates(allDates);
+  // };
+
+  useEffect(() => {
+    checkToken();
+    searchPlans();
+  });
+
+
+  const [reformed, setReformed] = useState("");
+  // const changeDateFormat = () => {
+  //   const arrOfDates = [];
+  //   inputDates.forEach((services) => {
+  //     const dateStr = services;
+  //     const date = new Date(dateStr);
+  //     const year = date.getFullYear();
+  //     const month = String(date.getMonth() + 1).padStart(2, "0");
+  //     const day = String(date.getDate()).padStart(2, "0");
+  //     const formattedDate = `${year}-${month}-${day}`;
+  //     console.log(formattedDate);
+  //     arrOfDates.push(formattedDate);
+  //   });
+  //   console.log(arrOfDates);
+  //   setReformed(arrOfDates);
+  //   console.log(reformed);
+  //   const getClosestDates = () => {
+  //     const today = new Date();
+  //     const upcomingDates = reformed.filter((date) => new Date(date) >= today);
+  //     const sortedDates = upcomingDates.sort(
+  //       (a, b) => new Date(a) - new Date(b)
+  //     );
+  //     return sortedDates.slice(0, 3);
+  //   };
+
+  //   const closestService = getClosestDates();
+  //   console.log(closestService);
+  //   setClosestDates(closestService);
+  // };
+
+  const searchPlans = async (e) => {
+    const { data } = await axios.get(
+      "https://api.planningcenteronline.com/services/v2/service_types/777403/plans",
+      {
+        headers: {
+          Authorization: `Bearer ${AccessToken}`,
+        },
+        params: {
+          order: "-sort_date",
+          per_page: "20",
+        },
+      }
+    );
+    setPlans(data.data);
     if (!Array.isArray(plans)) {
       console.error("plans is not an array");
       return;
@@ -225,58 +286,34 @@ const Live = (props) => {
     });
     console.log(plans);
     setInputDates(allDates);
-  };
 
-  useEffect(() => {
-    console.log(inputDates);
-  }, [inputDates]);
-  const [ reformed, setReformed] = useState("")
-  const changeDateFormat = () => {
-    const arrOfDates = []
+    const arrOfDates = [];
     inputDates.forEach((services) => {
-      const dateStr = services
+      const dateStr = services;
       const date = new Date(dateStr);
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
       const formattedDate = `${year}-${month}-${day}`;
-      console.log(formattedDate)
-      arrOfDates.push(formattedDate)
-    })
-    console.log(arrOfDates)
-    setReformed(arrOfDates)
-    console.log(reformed)
+      console.log(formattedDate);
+      arrOfDates.push(formattedDate);
+    });
+    console.log(arrOfDates);
+    setReformed(arrOfDates);
+    console.log(reformed);
     const getClosestDates = () => {
       const today = new Date();
-      const upcomingDates = reformed.filter(date => new Date(date) >= today);
-      const sortedDates = upcomingDates.sort((a, b) => new Date(a) - new Date(b));
+      const upcomingDates = reformed.filter((date) => new Date(date) >= today);
+      const sortedDates = upcomingDates.sort(
+        (a, b) => new Date(a) - new Date(b)
+      );
       return sortedDates.slice(0, 3);
     };
 
     const closestService = getClosestDates();
-    console.log(closestService)
-    setClosestDates(closestService)
-  }
-
-
-
-  const searchPlans = async (e) => {
-    e.preventDefault();
-    const { data } = await axios.get(
-      "https://api.planningcenteronline.com/services/v2/service_types/777403/plans",
-      {
-        headers: {
-          Authorization: `Bearer ${AccessToken}`,
-        },
-        params: {
-          order: "-sort_date",
-          per_page: "10",
-        },
-      }
-    );
-    setPlans(data.data);
-    console.log(data.data);
-    console.log(AccessToken);
+    console.log(closestService);
+    setClosestDates(closestService);
+    onOptionClicked()
   };
 
   const options = ServiceOptions;
@@ -432,8 +469,7 @@ const Live = (props) => {
       <div>
         <button onClick={checkToken}>button 1</button>
         <button onClick={searchPlans}>button 2</button>
-        <button onClick={renderServices}>button3</button>
-        <button onClick={changeDateFormat}>button 4</button>
+
         <button onClick={testing}>button 5</button>
       </div>
     </div>
