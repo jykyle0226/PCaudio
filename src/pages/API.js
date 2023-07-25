@@ -39,7 +39,6 @@ function API() {
   const FetchData = async (e) => {
     e.preventDefault();
     const form = new FormData();
-
     form.append("grant_type", "authorization_code");
     form.append("code", token);
     form.append("client_id", CLIENT_ID);
@@ -100,10 +99,15 @@ function API() {
     setInputDates(allDates);
   };
 
-  useEffect(() => {
-    console.log(inputDates);
-  }, [inputDates]);
 
+
+  useEffect(() => {
+    (async () => {
+      FetchData()
+    })();
+  }, []);
+
+  
   return (
     <div className="App">
       <header className="App-header">

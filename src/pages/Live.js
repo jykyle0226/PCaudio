@@ -16,6 +16,7 @@ import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import "../Style/style.css";
 import { useEffect } from "react";
+import { render } from "@testing-library/react";
 const ServiceOptions = ["W&P", "Sunday Service"];
 const SongOptions = ["First", "Second", "Third"];
 const defaultServiceOption = ServiceOptions[0];
@@ -193,7 +194,7 @@ const Live = (props) => {
       if (formattedDate === plan.attributes.dates) {
         setId(plan.id);
         console.log(id);
-        findSongs();
+
       }
     });
   };
@@ -211,82 +212,54 @@ const Live = (props) => {
   const [inputDates, setInputDates] = useState([]);
   const [closestDates, setClosestDates] = useState([]);
 
-  // const renderServices = () => {
-  //   if (!Array.isArray(plans)) {
-  //     console.error("plans is not an array");
-  //     return;
-  //   }
-  //   const allDates = [];
-  //   plans.forEach((plan) => {
-  //     const dateList = plan.attributes.dates;
-  //     allDates.push(dateList);
-  //   });
-  //   console.log(plans);
-  //   setInputDates(allDates);
-  // };
+  const renderServices = async () => {
+    try {
+      if (!Array.isArray(plans)) {
+        console.error("plans is not an array");
+        return;
+      }
+
+      const allDates = [];
+      for (const plan of plans) {
+        const dateList = plan.attributes.dates;
+        allDates.push(dateList);
+      }
+
+      console.log(inputDates);
+      setInputDates(allDates);
+    } catch (error) {
+      console.error("Error rendering services:", error);
+    }
+  };
 
   useEffect(() => {
-    checkToken();
-    searchPlans();
-  });
+    (async () => {
+      checkToken();
+      searchPlans();
+    })();
+  }, []);
 
+  useEffect(() => {
+    if (plans) {
+      renderServices();
+    }
+  }, [plans]);
+
+  useEffect(() => {
+    if (inputDates) {
+      changeDateFormat();
+    }    if (reformed !== "") {
+      getClosestDates();
+    }
+  }, [inputDates]);
+
+useEffect(() => {
+    findSongs();
+}, [id])
 
   const [reformed, setReformed] = useState("");
-  // const changeDateFormat = () => {
-  //   const arrOfDates = [];
-  //   inputDates.forEach((services) => {
-  //     const dateStr = services;
-  //     const date = new Date(dateStr);
-  //     const year = date.getFullYear();
-  //     const month = String(date.getMonth() + 1).padStart(2, "0");
-  //     const day = String(date.getDate()).padStart(2, "0");
-  //     const formattedDate = `${year}-${month}-${day}`;
-  //     console.log(formattedDate);
-  //     arrOfDates.push(formattedDate);
-  //   });
-  //   console.log(arrOfDates);
-  //   setReformed(arrOfDates);
-  //   console.log(reformed);
-  //   const getClosestDates = () => {
-  //     const today = new Date();
-  //     const upcomingDates = reformed.filter((date) => new Date(date) >= today);
-  //     const sortedDates = upcomingDates.sort(
-  //       (a, b) => new Date(a) - new Date(b)
-  //     );
-  //     return sortedDates.slice(0, 3);
-  //   };
 
-  //   const closestService = getClosestDates();
-  //   console.log(closestService);
-  //   setClosestDates(closestService);
-  // };
-
-  const searchPlans = async (e) => {
-    const { data } = await axios.get(
-      "https://api.planningcenteronline.com/services/v2/service_types/777403/plans",
-      {
-        headers: {
-          Authorization: `Bearer ${AccessToken}`,
-        },
-        params: {
-          order: "-sort_date",
-          per_page: "20",
-        },
-      }
-    );
-    setPlans(data.data);
-    if (!Array.isArray(plans)) {
-      console.error("plans is not an array");
-      return;
-    }
-    const allDates = [];
-    plans.forEach((plan) => {
-      const dateList = plan.attributes.dates;
-      allDates.push(dateList);
-    });
-    console.log(plans);
-    setInputDates(allDates);
-
+  const changeDateFormat = async () => {
     const arrOfDates = [];
     inputDates.forEach((services) => {
       const dateStr = services;
@@ -298,22 +271,38 @@ const Live = (props) => {
       console.log(formattedDate);
       arrOfDates.push(formattedDate);
     });
-    console.log(arrOfDates);
     setReformed(arrOfDates);
     console.log(reformed);
-    const getClosestDates = () => {
-      const today = new Date();
-      const upcomingDates = reformed.filter((date) => new Date(date) >= today);
-      const sortedDates = upcomingDates.sort(
-        (a, b) => new Date(a) - new Date(b)
-      );
-      return sortedDates.slice(0, 3);
-    };
+  };
 
-    const closestService = getClosestDates();
+  const getClosestDates = async () => {
+    const today = new Date();
+    const upcomingDates = reformed.filter((date) => new Date(date) >= today);
+    const sortedDates = upcomingDates.sort((a, b) => new Date(a) - new Date(b));
+    const closestService = sortedDates.slice(0, 3);
     console.log(closestService);
     setClosestDates(closestService);
-    onOptionClicked()
+  };
+
+  const searchPlans = async (e) => {
+    try {
+      const { data } = await axios.get(
+        "https://api.planningcenteronline.com/services/v2/service_types/777403/plans",
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+          },
+          params: {
+            order: "-sort_date",
+            per_page: "20",
+          },
+        }
+      );
+      setPlans(data.data);
+      console.log(plans);
+    } catch (error) {
+      console.error("Error fetching plans:", error);
+    }
   };
 
   const options = ServiceOptions;
@@ -469,7 +458,8 @@ const Live = (props) => {
       <div>
         <button onClick={checkToken}>button 1</button>
         <button onClick={searchPlans}>button 2</button>
-
+        <button onClick={renderServices}>button 3</button>
+        <button onClick={changeDateFormat}>button 4</button>
         <button onClick={testing}>button 5</button>
       </div>
     </div>
