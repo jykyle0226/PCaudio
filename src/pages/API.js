@@ -10,7 +10,21 @@ function API() {
     "ddb28c33d638d5368301517741b24857f545bdc02e5af0cc8d9ce2d152c8ef56";
   const [accessToken, setAccessToken] = useState("");
   const [token, setToken] = useState("");
+  useEffect(() => {
+    (async () => {
+      await FetchData();
+    })();
+  }, []);
 
+  useEffect(() => {
+    // Check if the authorization code is available
+    if (token) {
+      // Fetch the access token when the authorization code is available
+      FetchData();
+    }
+  }, [token]);
+
+  
   useEffect(() => {
     const search = window.location.search;
     let token = window.localStorage.getItem("code");
@@ -37,22 +51,29 @@ function API() {
   };
 
   const FetchData = async (e) => {
-    e.preventDefault();
-    const form = new FormData();
-    form.append("grant_type", "authorization_code");
-    form.append("code", token);
-    form.append("client_id", CLIENT_ID);
-    form.append("client_secret", CLIENT_SECRET);
-    form.append("redirect_uri", REDIRECT_URI);
-    const { data } = await axios.post(
-      `https://api.planningcenteronline.com/oauth/token`,
-      form
-    );
-    console.log(data);
-    const accessToken = data.access_token;
-    console.log(data.access_token);
-    setAccessToken(accessToken);
-    console.log(accessToken);
+    if (e) {
+      e.preventDefault();
+    }
+
+    try {
+      const form = new FormData();
+      form.append("grant_type", "authorization_code");
+      form.append("code", token);
+      form.append("client_id", CLIENT_ID);
+      form.append("client_secret", CLIENT_SECRET);
+      form.append("redirect_uri", REDIRECT_URI);
+      const { data } = await axios.post(
+        `https://api.planningcenteronline.com/oauth/token`,
+        form
+      );
+      console.log(data);
+      const accessToken = data.access_token;
+      console.log(data.access_token);
+      setAccessToken(accessToken);
+      console.log(accessToken);
+    } catch (error) {
+      console.error("Error fetching access token:", error);
+    }
   };
 
   localStorage.setItem("AccessToken", accessToken);
@@ -99,19 +120,10 @@ function API() {
     setInputDates(allDates);
   };
 
-
-
-  useEffect(() => {
-    (async () => {
-      FetchData()
-    })();
-  }, []);
-
-  
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Logged In</h1>
+        <h1>You are Logged In</h1>
         {!token ? (
           <a
             className="button-68"
@@ -125,20 +137,12 @@ function API() {
           </button>
         )}
         <div>
-          <div>
-            <div>Product:</div>
-            <button onClick={FetchData}> button </button>
-          </div>
+          <a href="/live">Live Page</a>
         </div>
-        <button onClick={searchPlans}>button2</button>
-        <button onClick={renderServices}>button3</button>
-        <button onClick={consoleToday}>button4</button>
         <div>
-          <a href="/live">go</a>
+          <a href="/edit">Edit Page</a>
         </div>
-        <ul>
-          <li>{inputDates}</li>
-        </ul>
+
       </header>
     </div>
   );

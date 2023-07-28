@@ -49,7 +49,7 @@ function API() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>API</h1>
+        <h1>Planning Center</h1>
 
           <a
             className="button-68"

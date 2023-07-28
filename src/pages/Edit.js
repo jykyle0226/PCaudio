@@ -9,7 +9,7 @@ import "../Style/AudioComp.css";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import styled from "styled-components";
-import moment from 'moment';
+import moment from "moment";
 
 import { useState, useEffect } from "react";
 
@@ -20,7 +20,6 @@ const Edit = (props) => {
   const Songtoggling = () => setSongIsOpen(!isSongOpen);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSongOption, setSelectedSongOption] = useState(null);
-
 
   const DCAdata = DCAArr.map((ele, index) => {
     return <DCA {...ele} key={index} />;
@@ -131,22 +130,21 @@ const Edit = (props) => {
     }
   `;
 
-
-  const [test1, setTest1] = useState()
-  const [test, setTest] = useState()
-  const [test3, setTest3] = useState()
+  const [test1, setTest1] = useState();
+  const [test, setTest] = useState();
+  const [test3, setTest3] = useState();
   const testing = () => {
-    console.log(selectedSongs)
-    console.log(test)
-    console.log(test1)
-    console.log(inputDates[7])
-    console.log(id)
-    if (test === inputDates[7]){
-      console.log(true)
+    console.log(selectedSongs);
+    console.log(test);
+    console.log(test1);
+    console.log(inputDates[7]);
+    console.log(id);
+    if (test === inputDates[7]) {
+      console.log(true);
     } else {
-      console.log(false)
+      console.log(false);
     }
-  }
+  };
 
   const [id, setId] = useState("");
   const [songs, setSongs] = useState("");
@@ -160,28 +158,26 @@ const Edit = (props) => {
       }
     );
     const songsData = data.data;
-    setTest3(songsData)
+    setTest3(songsData);
     const serviceOrders = [];
     songsData.forEach((songTitle) => {
       const songAttributes = songTitle.attributes.title;
       serviceOrders.push(songAttributes);
     }, setSongs(serviceOrders));
     console.log(songs);
-    const selectedSongs = songs.slice(3, 6)
-    console.log(selectedSongs)
-    setSelectedSongs(selectedSongs)
-    console.log(selectedSongs)
+    const selectedSongs = songs.slice(3, 6);
+    console.log(selectedSongs);
+    setSelectedSongs(selectedSongs);
+    console.log(selectedSongs);
   };
 
-  const [ selectedSongs, setSelectedSongs ] = useState("")
+  const [selectedSongs, setSelectedSongs] = useState("");
   const onOptionClicked = (value) => () => {
-    const dateStr = value
-    const formattedDate = moment.utc(dateStr).format('MMMM D, YYYY');
+    const dateStr = value;
+    const formattedDate = moment.utc(dateStr).format("MMMM D, YYYY");
 
-  
-
-    setTest1(value)
-    setTest(formattedDate)
+    setTest1(value);
+    setTest(formattedDate);
     setSelectedOption(value);
     setIsOpen(false);
     plans.forEach((plan) => {
@@ -223,35 +219,35 @@ const Edit = (props) => {
   useEffect(() => {
     console.log(inputDates);
   }, [inputDates]);
-  const [ reformed, setReformed] = useState("")
+  const [reformed, setReformed] = useState("");
   const changeDateFormat = () => {
-    const arrOfDates = []
+    const arrOfDates = [];
     inputDates.forEach((services) => {
-      const dateStr = services
+      const dateStr = services;
       const date = new Date(dateStr);
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
       const formattedDate = `${year}-${month}-${day}`;
-      console.log(formattedDate)
-      arrOfDates.push(formattedDate)
-    })
-    console.log(arrOfDates)
-    setReformed(arrOfDates)
-    console.log(reformed)
+      console.log(formattedDate);
+      arrOfDates.push(formattedDate);
+    });
+    console.log(arrOfDates);
+    setReformed(arrOfDates);
+    console.log(reformed);
     const getClosestDates = () => {
       const today = new Date();
-      const upcomingDates = reformed.filter(date => new Date(date) >= today);
-      const sortedDates = upcomingDates.sort((a, b) => new Date(a) - new Date(b));
+      const upcomingDates = reformed.filter((date) => new Date(date) >= today);
+      const sortedDates = upcomingDates.sort(
+        (a, b) => new Date(a) - new Date(b)
+      );
       return sortedDates.slice(0, 3);
     };
 
     const closestService = getClosestDates();
-    console.log(closestService)
-    setClosestDates(closestService)
-  }
-
-
+    console.log(closestService);
+    setClosestDates(closestService);
+  };
 
   const searchPlans = async (e) => {
     e.preventDefault();
@@ -383,83 +379,80 @@ const Edit = (props) => {
       </div>
       <section className="Data">
         <div className="UpperAndLower">
-        <div className="Upper">
-        <div type="button" class="btn cube1">
-          <div class="bg-top">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg-right">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="text">
-            <div id="db">
-              <h1 className="ADCnote">DCA</h1>
+          <div className="Upper">
+            <div type="button" class="btn cube1">
+              <div class="bg-top">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="bg-right">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="bg">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="text">
+                <div id="db">
+                  <h1 className="ADCnote">DCA</h1>
+                </div>
+              </div>
+              {DCAdata}
+            </div>
+            <div type="button" class="btn cube1">
+              <div class="bg-top">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="bg-right">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="bg">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="text">
+                <div id="db">
+                  <h1 className="ADCnote">STEM</h1>
+                </div>
+              </div>
+              {Stemdata}
             </div>
           </div>
-          {DCAdata}
-        </div>
-        <div type="button" class="btn cube1">
-          <div class="bg-top">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg-right">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="text">
-            <div id="db">
-              <h1 className="ADCnote">STEM</h1>
+          <div className="Lower">
+            <div type="button" class="btn cube1 ">
+              <div class="bg-top">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="bg-right">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="bg">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="text">
+                <div id="db">
+                  <h1 className="ADCnote">Instrumentals</h1>
+                </div>
+              </div>
+              {Instdata}
             </div>
-          </div>
-          {Stemdata}
-        </div>
-        </div>
-        <div className="Lower">
-        <div type="button" class="btn cube1 ">
-          <div class="bg-top">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg-right">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="text">
-            <div id="db">
-              <h1 className="ADCnote">Instrumentals</h1>
-            </div>
-          </div>
-          {Instdata}
-        </div>
 
-        <div type="button" class="btn cube1">
-          <div class="bg-top">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg-right">
-            <div class="bg-inner"></div>
-          </div>
-          <div class="bg">
-            <div id="this" class="bg-inner"></div>
-          </div>
-          <div class="text">
-            <div id="db">
-              <h1 className="ADCnote">Vocals</h1>
+            <div type="button" class="btn cube1">
+              <div class="bg-top">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="bg-right">
+                <div class="bg-inner"></div>
+              </div>
+              <div class="bg">
+                <div id="this" class="bg-inner"></div>
+              </div>
+              <div class="text">
+                <div id="db">
+                  <h1 className="ADCnote">Vocals</h1>
+                </div>
+              </div>
+              {Singerdata}
             </div>
           </div>
-          {Singerdata}
         </div>
-        </div>
-      
-        </div>
-        
-        
       </section>
       <div>
         <button onClick={checkToken}>button 1</button>
