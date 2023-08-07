@@ -18,7 +18,7 @@ import "../Style/style.css";
 import { useEffect } from "react";
 import { render } from "@testing-library/react";
 const ServiceOptions = ["W&P", "Sunday Service"];
-const SongOptions = ["First", "Second", "Third"];
+const SongOptions = ["In Jesus", "Second", "Third"];
 const defaultServiceOption = ServiceOptions[0];
 const defaultSongOption = SongOptions[0];
 
