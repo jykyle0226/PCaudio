@@ -1,7 +1,7 @@
 import React from "react";
 import DCADataComp from "./DCADataComp";
 
-const Audio = (props) => {
+const DCA = (props) => {
 
   return (
     <div>
@@ -12,4 +12,4 @@ const Audio = (props) => {
   );
 };
 
-export default Audio;
+export default DCA;

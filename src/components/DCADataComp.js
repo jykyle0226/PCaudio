@@ -2,22 +2,16 @@ import React from "react";
 import { useEffect, useState } from "react";
 import "../Style/AudioComp.css";
 const DCADataComp = () => {
-  const [leadVocals, setLeadVocals] = useState([]);
-  const [AllVocals, setAllVocals] = useState([]);
-  const [dBs, setDBs] = useState([]);
-  const [name, setName] = useState([]);
-  const [dB, setDB] = useState([]);
 
-  useEffect(() => {
-    const storedNames = JSON.parse(window.localStorage.getItem("singerNames"));
-    const storedDBs = JSON.parse(window.localStorage.getItem("dBValues"));
-    const LeadVocals = JSON.parse(window.localStorage.getItem("leadVocal"));
-    const Allvocals = JSON.parse(window.localStorage.getItem("Allvocals"));
-    if (leadVocals && Allvocals) {
-      setLeadVocals(LeadVocals);
-      setAllVocals(Allvocals);
-    }
-  }, []);
+
+
+  const storedDbValues = JSON.parse(localStorage.getItem("dBValues"));
+  const storedLeadVocals = JSON.parse(localStorage.getItem("leadVocals"));
+  const storedAllVocals = JSON.parse(localStorage.getItem("Allvocals"));
+
+  const LeadVocals = storedLeadVocals
+  const AllVocals = storedAllVocals
+  const dB = storedDbValues
 
   return (
     <div className="AudioDataComp">
@@ -33,15 +27,13 @@ const DCADataComp = () => {
         </div>
         <div className="testbox">
           <div>
-            {names.map((name, index) => (
-              <div key={index} className="testbox">
-                <div>
-                  <div id="db" className="Edittext">
-                    <h1 className="ADCname">{name}</h1>
-                  </div>
+            <div className="testbox">
+              <div>
+                <div id="db" className="Edittext">
+                  <h1 className="ADCname">{LeadVocals}</h1>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
@@ -96,8 +88,6 @@ const DCADataComp = () => {
           </div>
         </div>
       </div>
-
-      <div></div>
     </div>
   );
 };

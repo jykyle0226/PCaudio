@@ -100,31 +100,93 @@ const ListItem = styled("li")`
   }
 `;
 const Edit = (props) => {
+  const [theSongId, setTheSongId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isSongOpen, setSongIsOpen] = useState(false);
-  const Servicetoggling = () => setIsOpen(!isOpen);
-  const Songtoggling = () => setSongIsOpen(!isSongOpen);
+
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSongOption, setSelectedSongOption] = useState(null);
-
-  const DCAdata = DCAArr.map((ele, index) => {
-    return <DCA {...ele} key={index} />;
-  });
-
-  const Instdata = InstArr.map((ele, index) => {
-    return <DCA {...ele} key={index} />;
-  });
-
-  const Singerdata = SingerArr.map((ele, index) => {
-    return <DCA {...ele} key={index} />;
-  });
-
-  const Stemdata = StemArr.map((ele, index) => {
-    return <DCA {...ele} key={index} />;
-  });
-
   const [songId, setSongId] = useState("");
   const [songData, setSongData] = useState("");
+  const [planId, setPlanId] = useState("");
+  const [songs, setSongs] = useState("");
+  const [leadSingers, setleadSingers] = useState([]);
+  const [AllVocals, setAllVocals] = useState([]);
+  const [singerData, setSingerData] = useState([]);
+  const [dBData, setdBData] = useState([]);
+  const [plans, setPlans] = useState("");
+  const [planDates, setPlanDates] = useState([]);
+  const [closestDates, setClosestDates] = useState([]);
+
+  useEffect(() => {
+    if (theSongId) {
+      getDbMemo();
+    }
+  }, [theSongId]);
+
+
+  useEffect(() => {
+    if (singerData.length > 0 && dBData.length > 0) {
+      const SingerData = singerData.map((name, index) => {
+        const dB = parseInt(dBData[index]) - 1;
+        return {
+          Name: name,
+          dB: `${dB}`,
+          Note: "",
+          Category: "Singer",
+        };
+      });
+      const Singerdata = SingerData.map((data, index) => {
+        return <DCA {...data} key={index} />;
+      });
+    }
+  }, [singerData, dBData]);
+
+
+
+  useEffect(() => {
+    (async () => {
+      checkToken();
+      searchPlans();
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (plans) {
+      getDatesFromPlans();
+    }
+  }, [plans]);
+
+  useEffect(() => {
+    if (planDates) {
+      getClosestDates();
+    }
+  }, [planDates]);
+
+  useEffect(() => {
+    if (planId) {
+      findSongs();
+    }
+    findLeadSingers();
+    findAllSingers();
+  }, [planId]);
+
+  
+  const Servicetoggling = () => setIsOpen(!isOpen);
+  const Songtoggling = () => setSongIsOpen(!isSongOpen);
+
+  const DCAdata = DCAArr.map((data, index) => {
+    return <DCA {...data} key={index} />;
+  });
+
+  const Instdata = InstArr.map((data, index) => {
+    return <DCA {...data} key={index} />;
+  });
+
+  const Stemdata = StemArr.map((data, index) => {
+    return <DCA {...data} key={index} />;
+  });
+
   const findSongs = async (e) => {
     try {
       const { data } = await axios.get(
@@ -165,9 +227,6 @@ const Edit = (props) => {
     }
   };
 
-  const [planId, setPlanId] = useState("");
-  const [songs, setSongs] = useState("");
-
   const onOptionClicked = (dateStr) => () => {
     const formattedDate = moment.utc(dateStr).format("MMMM D, YYYY");
 
@@ -177,10 +236,7 @@ const Edit = (props) => {
       (plan) => formattedDate === plan.attributes.dates
     );
     setPlanId(selectedPlan.id);
-    console.log()
   };
-
-  const [leadSingers, setleadSingers] = useState([]);
 
   const findLeadSingers = async (e) => {
     try {
@@ -199,26 +255,30 @@ const Edit = (props) => {
       itemData.forEach((item) => {
         const itemDescription = item.attributes.description;
         itemDescriptions.push(itemDescription);
-        console.log(itemDescriptions);
       });
 
       const bySingers = itemDescriptions.slice(3, 6);
 
       const leadSingersData = [];
       bySingers.forEach((bySinger) => {
-        const singer = bySinger.replace("By ", "");
+        const match = bySinger.match(/By\s+(.*?)(?:\s|$)/);
+        const singer = match ? match[1] : bySinger;
         console.log(singer);
+        const correctedSinger = singer === "현정" ? "Hyunjeong" : singer;
+        leadSingersData.push(correctedSinger);
         leadSingersData.push(singer);
-        window.localStorage.setItem("leadVocal", JSON.stringify(leadSingersData));
+        window.localStorage.setItem(
+          "leadVocals",
+          JSON.stringify(leadSingersData)
+        );
       });
-
+      console.log(leadSingersData);
       setleadSingers(leadSingersData);
-      
+      console.log(leadSingers);
     } catch (error) {
       console.error("Error fetching singers:", error);
     }
   };
-  const [vocals, setVocals] = useState([]);
   const findAllSingers = async (e) => {
     try {
       const { data } = await axios.get(
@@ -241,9 +301,14 @@ const Edit = (props) => {
                 teamMember.attributes.team_position_name === "Tenor")
           )
           .map((teamMember) => teamMember.attributes.name);
-            window.localStorage.setItem('Allvocals', Allvocals)
-        console.log(Allvocals);
+
+        const AllSingersFirstName = Allvocals.map((fullName) => {
+          const parts = fullName.split(" ");
+          return parts[0];
+        });
+        setAllVocals(AllSingersFirstName);
       });
+      window.localStorage.setItem("Allvocals", JSON.stringify(AllVocals));
     } catch (error) {
       console.error("Error fetching singers:", error);
     }
@@ -283,13 +348,12 @@ const Edit = (props) => {
       window.localStorage.setItem("singerNames", JSON.stringify(names));
       window.localStorage.setItem("dBValues", JSON.stringify(dBValues));
 
-      console.log("Names:", names);
-      console.log("dB Values:", dBValues);
+      setSingerData(names);
+      setdBData(dBValues);
     } catch (error) {
       console.error("Error fetching singers:", error);
     }
   };
-  const [theSongId, setTheSongId] = useState("");
 
   const onSongOptionClicked = (value) => () => {
     songData.forEach((data) => {
@@ -300,24 +364,14 @@ const Edit = (props) => {
         setTheSongId(theSongId);
       }
     });
-    getDbMemo();
   };
 
-  useEffect(() => {
-    if (theSongId) {
-      getDbMemo();
-    }
-  }, [theSongId]);
 
   const AccessToken = localStorage.getItem("AccessToken");
 
   const checkToken = () => {
     console.log(AccessToken);
   };
-
-  const [plans, setPlans] = useState("");
-  const [planDates, setPlanDates] = useState([]);
-  const [closestDates, setClosestDates] = useState([]);
 
   const getDatesFromPlans = async () => {
     try {
@@ -338,31 +392,6 @@ const Edit = (props) => {
       console.error("Error rendering services:", error);
     }
   };
-
-  useEffect(() => {
-    (async () => {
-      checkToken();
-      searchPlans();
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (plans) {
-      getDatesFromPlans();
-    }
-  }, [plans]);
-
-  useEffect(() => {
-    if (planDates) {
-      getClosestDates();
-    }
-  }, [planDates]);
-
-  useEffect(() => {
-    if (planId) {
-      findSongs();
-    }
-  }, [planId]);
 
   const changeDateFormat = (dateStr) => {
     const date = new Date(dateStr);
