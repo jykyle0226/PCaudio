@@ -30,7 +30,7 @@ const DCADataComp = () => {
             <div className="testbox">
               <div>
                 <div id="db" className="Edittext">
-                  <h1 className="ADCname">{LeadVocals}</h1>
+                  <h1 className="ADCname">{}</h1>
                 </div>
               </div>
             </div>

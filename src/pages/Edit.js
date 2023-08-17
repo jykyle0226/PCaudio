@@ -125,24 +125,6 @@ const Edit = (props) => {
   }, [theSongId]);
 
 
-  useEffect(() => {
-    if (singerData.length > 0 && dBData.length > 0) {
-      const SingerData = singerData.map((name, index) => {
-        const dB = parseInt(dBData[index]) - 1;
-        return {
-          Name: name,
-          dB: `${dB}`,
-          Note: "",
-          Category: "Singer",
-        };
-      });
-      const Singerdata = SingerData.map((data, index) => {
-        return <DCA {...data} key={index} />;
-      });
-    }
-  }, [singerData, dBData]);
-
-
 
   useEffect(() => {
     (async () => {
@@ -176,6 +158,18 @@ const Edit = (props) => {
   const Songtoggling = () => setSongIsOpen(!isSongOpen);
 
   const DCAdata = DCAArr.map((data, index) => {
+    return <DCA {...data} key={index} />;
+  });
+
+  const Singerdata = (singerData||[]).map((name, index) => {
+    const dB = parseInt(dBData[index]) - 1;
+    return {
+      Name: name,
+      dB: `${dB}`,
+      Note: "",
+      Category: "Singer",
+    };
+  }).map((data, index) => {
     return <DCA {...data} key={index} />;
   });
 
@@ -313,7 +307,6 @@ const Edit = (props) => {
       console.error("Error fetching singers:", error);
     }
   };
-
   const getDbMemo = async (e) => {
     console.log(theSongId);
     try {
@@ -325,31 +318,47 @@ const Edit = (props) => {
           },
         }
       );
-
+  
       const songDetails = data.data;
       const vocalsItem = songDetails.find(
         (item) => item.attributes.category_name === "Vocals"
       );
       const vocalItemContent = vocalsItem.attributes.content;
       console.log(vocalItemContent);
-
-      if (vocalsItem) {
-        console.log("Vocals item:", vocalsItem);
-      } else {
-        console.log("No vocals item found.");
-      }
-
+  
+      const Instrumental = [];
+      const DCA = [];
+      const Vocal = [];
+      const STEM = [];
+  
       const names = vocalItemContent
         .match(/{(.*?):/g)
         .map((match) => match.slice(1, -1));
       const dBValues = vocalItemContent
         .match(/:(.*?)}/g)
         .map((match) => match.slice(1, -1));
-      window.localStorage.setItem("singerNames", JSON.stringify(names));
-      window.localStorage.setItem("dBValues", JSON.stringify(dBValues));
+  
+      for (let i = 0; i < names.length; i++) {
+        const name = names[i];
+        const dB = dBValues[i];
+  
+        if (name === "Keys" || name === "Bass" || name === "Elec" || name === "Acoustic 1" || name === "Acoustic 2" || name === "Drum") {
+          Instrumental.push({ name, dB });
+        } else if (!["Keys", "Bass", "Elec", "Acoustic 1", "Acoustic 2", "Drum"].includes(name) && name.includes("STEM")) {
+          STEM.push({ name, dB });
+        } else if (!["Keys", "Bass", "Elec", "Acoustic 1", "Acoustic 2", "Drum"].includes(name) && name.includes("DCA")) {
+          DCA.push({ name, dB });
+        } else {
+          Vocal.push({ name, dB });
+        }
+      }
 
-      setSingerData(names);
-      setdBData(dBValues);
+
+      console.log("Instrumental:", Instrumental);
+      console.log("STEM:", STEM);
+      console.log("DCA:", DCA);
+      console.log("Vocal:", Vocal);
+
     } catch (error) {
       console.error("Error fetching singers:", error);
     }
