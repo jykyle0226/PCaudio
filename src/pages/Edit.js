@@ -117,14 +117,16 @@ const Edit = (props) => {
   const [plans, setPlans] = useState("");
   const [planDates, setPlanDates] = useState([]);
   const [closestDates, setClosestDates] = useState([]);
+  const [Instrumental, setInstrumental] = useState([]);
+  const [DCAarr, setDCAarr] = useState([]);
+  const [Vocal, setVocal] = useState([]);
+  const [STEM, setSTEM] = useState([]);
 
   useEffect(() => {
     if (theSongId) {
       getDbMemo();
     }
   }, [theSongId]);
-
-
 
   useEffect(() => {
     (async () => {
@@ -153,31 +155,28 @@ const Edit = (props) => {
     findAllSingers();
   }, [planId]);
 
-  
+  useEffect(() => {
+    if (AllVocals) {
+      window.localStorage.setItem("Allvocals", JSON.stringify(AllVocals));
+    }
+  });
+
   const Servicetoggling = () => setIsOpen(!isOpen);
   const Songtoggling = () => setSongIsOpen(!isSongOpen);
 
-  const DCAdata = DCAArr.map((data, index) => {
+  const DCAdata = DCAarr.map((data, index) => {
     return <DCA {...data} key={index} />;
   });
 
-  const Singerdata = (singerData||[]).map((name, index) => {
-    const dB = parseInt(dBData[index]) - 1;
-    return {
-      Name: name,
-      dB: `${dB}`,
-      Note: "",
-      Category: "Singer",
-    };
-  }).map((data, index) => {
+  const Singerdata = Vocal.map((data, index) => {
     return <DCA {...data} key={index} />;
   });
 
-  const Instdata = InstArr.map((data, index) => {
+  const Instdata = Instrumental.map((data, index) => {
     return <DCA {...data} key={index} />;
   });
 
-  const Stemdata = StemArr.map((data, index) => {
+  const Stemdata = STEM.map((data, index) => {
     return <DCA {...data} key={index} />;
   });
 
@@ -252,15 +251,17 @@ const Edit = (props) => {
       });
 
       const bySingers = itemDescriptions.slice(3, 6);
-
+      console.log(bySingers);
       const leadSingersData = [];
       bySingers.forEach((bySinger) => {
         const match = bySinger.match(/By\s+(.*?)(?:\s|$)/);
         const singer = match ? match[1] : bySinger;
         console.log(singer);
         const correctedSinger = singer === "현정" ? "Hyunjeong" : singer;
+        console.log(correctedSinger);
         leadSingersData.push(correctedSinger);
         leadSingersData.push(singer);
+        console.log(leadSingersData);
         window.localStorage.setItem(
           "leadVocals",
           JSON.stringify(leadSingersData)
@@ -285,6 +286,7 @@ const Edit = (props) => {
       );
 
       const allTeamMembers = data.data;
+
       allTeamMembers.forEach((teamMembers) => {
         const Allvocals = allTeamMembers
           .filter(
@@ -295,18 +297,18 @@ const Edit = (props) => {
                 teamMember.attributes.team_position_name === "Tenor")
           )
           .map((teamMember) => teamMember.attributes.name);
-
         const AllSingersFirstName = Allvocals.map((fullName) => {
           const parts = fullName.split(" ");
           return parts[0];
         });
         setAllVocals(AllSingersFirstName);
+        console.log("singers", AllSingersFirstName);
       });
-      window.localStorage.setItem("Allvocals", JSON.stringify(AllVocals));
     } catch (error) {
       console.error("Error fetching singers:", error);
     }
   };
+
   const getDbMemo = async (e) => {
     console.log(theSongId);
     try {
@@ -318,47 +320,77 @@ const Edit = (props) => {
           },
         }
       );
-  
+
       const songDetails = data.data;
       const vocalsItem = songDetails.find(
         (item) => item.attributes.category_name === "Vocals"
       );
       const vocalItemContent = vocalsItem.attributes.content;
       console.log(vocalItemContent);
-  
+
       const Instrumental = [];
-      const DCA = [];
+      const DCAarr = [];
       const Vocal = [];
       const STEM = [];
-  
+
       const names = vocalItemContent
         .match(/{(.*?):/g)
         .map((match) => match.slice(1, -1));
       const dBValues = vocalItemContent
         .match(/:(.*?)}/g)
         .map((match) => match.slice(1, -1));
-  
+
       for (let i = 0; i < names.length; i++) {
         const name = names[i];
         const dB = dBValues[i];
-  
-        if (name === "Keys" || name === "Bass" || name === "Elec" || name === "Acoustic 1" || name === "Acoustic 2" || name === "Drum") {
+
+        if (
+          name === "Keys" ||
+          name === "Bass" ||
+          name === "Elec" ||
+          name === "AGtr 1" ||
+          name === "AGtr 2" ||
+          name === "Drum"
+        ) {
           Instrumental.push({ name, dB });
-        } else if (!["Keys", "Bass", "Elec", "Acoustic 1", "Acoustic 2", "Drum"].includes(name) && name.includes("STEM")) {
+        } else if (
+          ![
+            "Keys",
+            "Bass",
+            "Elec",
+            "Acoustic 1",
+            "Acoustic 2",
+            "Drum",
+          ].includes(name) &&
+          name.includes("STEM")
+        ) {
           STEM.push({ name, dB });
-        } else if (!["Keys", "Bass", "Elec", "Acoustic 1", "Acoustic 2", "Drum"].includes(name) && name.includes("DCA")) {
-          DCA.push({ name, dB });
+        } else if (
+          ![
+            "Keys",
+            "Bass",
+            "Elec",
+            "Acoustic 1",
+            "Acoustic 2",
+            "Drum",
+          ].includes(name) &&
+          name.includes("DCA")
+        ) {
+          DCAarr.push({ name, dB });
         } else {
           Vocal.push({ name, dB });
         }
       }
-
+      setInstrumental(Instrumental);
+      setSTEM(STEM);
+      setVocal(Vocal);
+      setDCAarr(DCAarr);
 
       console.log("Instrumental:", Instrumental);
       console.log("STEM:", STEM);
-      console.log("DCA:", DCA);
+      console.log("DCA:", DCAarr);
       console.log("Vocal:", Vocal);
-
+      console.log(STEM, DCAarr, Instrumental, Vocal);
     } catch (error) {
       console.error("Error fetching singers:", error);
     }
@@ -374,7 +406,6 @@ const Edit = (props) => {
       }
     });
   };
-
 
   const AccessToken = localStorage.getItem("AccessToken");
 
@@ -644,10 +675,6 @@ const Edit = (props) => {
             </div>
           </div>
         </div>
-        <button onClick={findLeadSingers}>button</button>
-        <button onClick={getTeamMemberList}> button2</button>
-        <button onClick={findAllSingers}>button3</button>
-        <button onClick={getDbMemo}>button4</button>
       </section>
     </div>
   );

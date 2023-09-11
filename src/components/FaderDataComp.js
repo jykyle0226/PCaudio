@@ -2,14 +2,10 @@ import React from "react";
 import { useEffect, useState } from "react";
 import "../Style/Fader.css";
 
-const FaderDataComp = ({ Name, dB, Catagory }) => {
+const FaderDataComp = ({ name, dB, Catagory }) => {
   const [db, setDb] = useState(dB);
   const [muted, setMuted] = useState(true ? db === "" : false);
   const finalVolume = muted ? -60 : db ** 1;
-  const [inst, setInst] = useState(true ? Catagory === "Inst" : false);
-  const [dca, setDca] = useState(true ? Catagory === "dca" : false);
-  const [singer, setSinger] = useState(true ? Catagory === "singer" : false);
-  const [stem, setStem] = useState(true ? Catagory === "Stem" : false);
   const indicatorColor = () =>{
     if(Catagory === 'Inst') {
       return '#6372EE'
@@ -71,7 +67,7 @@ const FaderDataComp = ({ Name, dB, Catagory }) => {
         className="screen"
       >
         <section>
-          <p  id="screenfont" className="name">{Name}</p>
+          <p  id="screenfont" className="name">{name}</p>
         </section>
         <section>
           <p id="screenfont" className="dB">{finalVolume.toFixed(1)} dB</p>

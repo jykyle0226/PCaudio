@@ -4,11 +4,8 @@ import moment from "moment";
 import FaderDataComp from "../components/FaderDataComp";
 import styled from "styled-components";
 import { useState } from "react";
-import DCAArr from "../DCAData";
 import axios from "axios";
-import InstArr from "../InstData";
-import SingerArr from "../SingerData";
-import StemArr from "../StemData";
+
 import API from "../pages/API";
 import DCA from "../components/DCA";
 import "../Style/Fader.css";
@@ -117,124 +114,33 @@ const ListItem = styled("li")`
 `;
 
 const Live = (props) => {
+  const [theSongId, setTheSongId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isSongOpen, setSongIsOpen] = useState(false);
-  const Servicetoggling = () => {
-    setIsOpen(!isOpen);
-  };
-  const Songtoggling = () => setSongIsOpen(!isSongOpen);
+
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSongOption, setSelectedSongOption] = useState(null);
-
-  const DCAfader = DCAArr.map((ele, index) => {
-    return <Fader {...ele} key={index} />;
-  });
-
-  const InstFader = InstArr.map((ele, index) => {
-    return <Fader {...ele} key={index} />;
-  });
-
-  const SingerFader = SingerArr.map((ele, index) => {
-    return <Fader {...ele} key={index} />;
-  });
-
-  const StemFader = StemArr.map((ele, index) => {
-    return <Fader {...ele} key={index} />;
-  });
-  const [test1, setTest1] = useState();
-  const [test, setTest] = useState();
-  const [test3, setTest3] = useState();
-  const testing = () => {
-    console.log(test);
-    console.log(test1);
-    if (test === planDates[7]) {
-      console.log(true);
-    } else {
-      console.log(false);
-    }
-  };
-
-  const findSongs = async (e) => {
-    try {
-      const { data } = await axios.get(
-        `https://api.planningcenteronline.com/services/v2/service_types/777403/plans/${planId}/items`,
-        {
-          headers: {
-            Authorization: `Bearer ${AccessToken}`,
-          },
-        }
-      );
-      const itemData = data.data;
-      setTest3(itemData);
-      const itemTitles = [];
-
-      itemData.forEach((item) => {
-        const itemTitle = item.attributes.title;
-        itemTitles.push(itemTitle);
-      });
-      
- const songTitles = itemTitles.slice(3, 6);
-      setSongs(songTitles);
-    } catch (error) {
-      if (error.response) {
-        console.error(
-          "Request failed with status code:",
-          error.response.status
-        );
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error occurred:", error.message);
-      }
-    }
-  };
-
-
+  const [songId, setSongId] = useState("");
+  const [songData, setSongData] = useState("");
   const [planId, setPlanId] = useState("");
   const [songs, setSongs] = useState("");
-
-  const onOptionClicked = (dateStr) => () => {
-    const formattedDate = moment.utc(dateStr).format("MMMM D, YYYY");
-
-    setSelectedOption(dateStr);
-    setIsOpen(false);
-    const selectedPlan = plans.find((plan) => formattedDate === plan.attributes.dates)
-    setPlanId(selectedPlan.id)
-  };
-
-  const onSongOptionClicked = (value) => () => {
-    console.log("yay");
-  };
-
-  const AccessToken = localStorage.getItem("AccessToken");
-
-  const checkToken = () => {
-    console.log(AccessToken);
-  };
-
+  const [leadSingers, setleadSingers] = useState([]);
+  const [AllVocals, setAllVocals] = useState([]);
+  const [singerData, setSingerData] = useState([]);
+  const [dBData, setdBData] = useState([]);
   const [plans, setPlans] = useState("");
   const [planDates, setPlanDates] = useState([]);
   const [closestDates, setClosestDates] = useState([]);
+  const [Instrumental, setInstrumental] = useState([]);
+  const [DCAarr, setDCAarr] = useState([]);
+  const [Vocal, setVocal] = useState([]);
+  const [STEM, setSTEM] = useState([]);
 
-  const getDatesFromPlans = async () => {
-    try {
-      if (!Array.isArray(plans)) {
-        console.error("plans is not an array");
-        return;
-      }
-
-      const allDates = [];
-      for (const plan of plans) {
-        const date = plan.attributes.dates;
-        allDates.push(changeDateFormat(date));
-      }
-
-      setPlanDates(allDates);
-      console.log(planDates);
-    } catch (error) {
-      console.error("Error rendering services:", error);
+  useEffect(() => {
+    if (theSongId) {
+      getDbMemo();
     }
-  };
+  }, [theSongId]);
 
   useEffect(() => {
     (async () => {
@@ -259,8 +165,291 @@ const Live = (props) => {
     if (planId) {
       findSongs();
     }
+    findLeadSingers();
+    findAllSingers();
   }, [planId]);
 
+  useEffect(() => {
+    if (AllVocals) {
+      window.localStorage.setItem("Allvocals", JSON.stringify(AllVocals));
+    }
+  });
+
+  const Servicetoggling = () => setIsOpen(!isOpen);
+  const Songtoggling = () => setSongIsOpen(!isSongOpen);
+
+
+  const DCAfader = DCAarr.map((data, index) => {
+    return <Fader {...data} key={index} />;
+  });
+
+  const InstFader = Instrumental.map((data, index) => {
+    return <Fader {...data} key={index} />;
+  });
+
+  const SingerFader =  Vocal.map((data, index) => {
+    return <Fader {...data} key={index} />;
+  });
+
+  const StemFader = STEM.map((data, index) => {
+    return <Fader {...data} key={index} />;
+  });
+
+
+
+
+  const findSongs = async (e) => {
+    try {
+      const { data } = await axios.get(
+        `https://api.planningcenteronline.com/services/v2/service_types/777403/plans/${planId}/items`,
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+          },
+        }
+      );
+      console.log(planId);
+      const itemData = data.data;
+      const songData = itemData.slice(3, 6);
+      setSongData(songData);
+      const itemTitles = [];
+      const itemIds = [];
+      itemData.forEach((item) => {
+        const itemTitle = item.attributes.title;
+        const itemId = item.id;
+        itemTitles.push(itemTitle);
+        itemIds.push(itemId);
+      });
+      const songIds = itemIds.slice(3, 6);
+      setSongId(songIds);
+      const songTitles = itemTitles.slice(3, 6);
+      setSongs(songTitles);
+    } catch (error) {
+      if (error.response) {
+        console.error(
+          "Request failed with status code:",
+          error.response.status
+        );
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Error occurred:", error.message);
+      }
+    }
+  };
+
+  const onOptionClicked = (dateStr) => () => {
+    const formattedDate = moment.utc(dateStr).format("MMMM D, YYYY");
+
+    setSelectedOption(dateStr);
+    setIsOpen(false);
+    const selectedPlan = plans.find(
+      (plan) => formattedDate === plan.attributes.dates
+    );
+    setPlanId(selectedPlan.id);
+  };
+
+  const findLeadSingers = async (e) => {
+    try {
+      const { data } = await axios.get(
+        `https://api.planningcenteronline.com/services/v2/service_types/777403/plans/${planId}/items`,
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+          },
+        }
+      );
+
+      const itemData = data.data;
+      const itemDescriptions = [];
+
+      itemData.forEach((item) => {
+        const itemDescription = item.attributes.description;
+        itemDescriptions.push(itemDescription);
+      });
+
+      const bySingers = itemDescriptions.slice(3, 6);
+      console.log(bySingers);
+      const leadSingersData = [];
+      bySingers.forEach((bySinger) => {
+        const match = bySinger.match(/By\s+(.*?)(?:\s|$)/);
+        const singer = match ? match[1] : bySinger;
+        console.log(singer);
+        const correctedSinger = singer === "현정" ? "Hyunjeong" : singer;
+        console.log(correctedSinger);
+        leadSingersData.push(correctedSinger);
+        leadSingersData.push(singer);
+        console.log(leadSingersData);
+        window.localStorage.setItem(
+          "leadVocals",
+          JSON.stringify(leadSingersData)
+        );
+      });
+      console.log(leadSingersData);
+      setleadSingers(leadSingersData);
+      console.log(leadSingers);
+    } catch (error) {
+      console.error("Error fetching singers:", error);
+    }
+  };
+  const findAllSingers = async (e) => {
+    try {
+      const { data } = await axios.get(
+        `  https://api.planningcenteronline.com/services/v2/service_types/777403/plans/${planId}/team_members`,
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+          },
+        }
+      );
+
+      const allTeamMembers = data.data;
+
+      allTeamMembers.forEach((teamMembers) => {
+        const Allvocals = allTeamMembers
+          .filter(
+            (teamMember) =>
+              teamMember.attributes.status === "C" &&
+              (teamMember.attributes.team_position_name === "Soprano" ||
+                teamMember.attributes.team_position_name === "Alto" ||
+                teamMember.attributes.team_position_name === "Tenor")
+          )
+          .map((teamMember) => teamMember.attributes.name);
+        const AllSingersFirstName = Allvocals.map((fullName) => {
+          const parts = fullName.split(" ");
+          return parts[0];
+        });
+        setAllVocals(AllSingersFirstName);
+        console.log("singers", AllSingersFirstName);
+      });
+    } catch (error) {
+      console.error("Error fetching singers:", error);
+    }
+  };
+
+  const getDbMemo = async (e) => {
+    console.log(theSongId);
+    try {
+      const { data } = await axios.get(
+        `https://api.planningcenteronline.com/services/v2/service_types/777403/plans/${planId}/items/${theSongId}/item_notes`,
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+          },
+        }
+      );
+
+      const songDetails = data.data;
+      const vocalsItem = songDetails.find(
+        (item) => item.attributes.category_name === "Vocals"
+      );
+      const vocalItemContent = vocalsItem.attributes.content;
+      console.log(vocalItemContent);
+
+      const Instrumental = [];
+      const DCAarr = [];
+      const Vocal = [];
+      const STEM = [];
+
+      const names = vocalItemContent
+        .match(/{(.*?):/g)
+        .map((match) => match.slice(1, -1));
+      const dBValues = vocalItemContent
+        .match(/:(.*?)}/g)
+        .map((match) => match.slice(1, -1));
+
+      for (let i = 0; i < names.length; i++) {
+        const name = names[i];
+        const dB = dBValues[i];
+
+        if (
+          name === "Keys" ||
+          name === "Bass" ||
+          name === "Elec" ||
+          name === "AGtr 1" ||
+          name === "AGtr 2" ||
+          name === "Drum"
+        ) {
+          Instrumental.push({ name, dB });
+        } else if (
+          ![
+            "Keys",
+            "Bass",
+            "Elec",
+            "Acoustic 1",
+            "Acoustic 2",
+            "Drum",
+          ].includes(name) &&
+          name.includes("STEM")
+        ) {
+          STEM.push({ name, dB });
+        } else if (
+          ![
+            "Keys",
+            "Bass",
+            "Elec",
+            "Acoustic 1",
+            "Acoustic 2",
+            "Drum",
+          ].includes(name) &&
+          name.includes("DCA")
+        ) {
+          DCAarr.push({ name, dB });
+        } else {
+          Vocal.push({ name, dB });
+        }
+      }
+      setInstrumental(Instrumental);
+      setSTEM(STEM);
+      setVocal(Vocal);
+      setDCAarr(DCAarr);
+
+      console.log("Instrumental:", Instrumental);
+      console.log("STEM:", STEM);
+      console.log("DCA:", DCAarr);
+      console.log("Vocal:", Vocal);
+      console.log(STEM, DCAarr, Instrumental, Vocal);
+    } catch (error) {
+      console.error("Error fetching singers:", error);
+    }
+  };
+
+  const onSongOptionClicked = (value) => () => {
+    songData.forEach((data) => {
+      if (data.attributes.title === value) {
+        console.log(value);
+        const theSongId = data.id;
+        console.log(theSongId);
+        setTheSongId(theSongId);
+      }
+    });
+  };
+
+  const AccessToken = localStorage.getItem("AccessToken");
+
+  const checkToken = () => {
+    console.log(AccessToken);
+  };
+
+  const getDatesFromPlans = async () => {
+    try {
+      if (!Array.isArray(plans)) {
+        console.error("plans is not an array");
+        return;
+      }
+
+      const allDates = [];
+      for (const plan of plans) {
+        const date = plan.attributes.dates;
+        allDates.push(changeDateFormat(date));
+      }
+
+      setPlanDates(allDates);
+      console.log(planDates);
+    } catch (error) {
+      console.error("Error rendering services:", error);
+    }
+  };
 
   const changeDateFormat = (dateStr) => {
     const date = new Date(dateStr);
@@ -268,9 +457,29 @@ const Live = (props) => {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
-  }
+  };
 
-
+  const getTeamMemberList = async (e) => {
+    try {
+      const { data } = await axios.get(
+        `https://api.planningcenteronline.com/services/v2/service_types/777403/teams/2947875/people`,
+        {
+          headers: {
+            Authorization: `Bearer ${AccessToken}`,
+          },
+        }
+      );
+      const teamData = data.data;
+      const FullName = [];
+      console.log(teamData);
+      teamData.forEach((teamMember) => {
+        const membersFullName = teamMember.attributes.first_name;
+        console.log(membersFullName);
+      });
+    } catch (error) {
+      console.error("Error fetching members:", error);
+    }
+  };
   const getClosestDates = async () => {
     const today = new Date();
     const upcomingDates = planDates.filter((date) => new Date(date) >= today);
@@ -294,7 +503,7 @@ const Live = (props) => {
           },
         }
       );
-      console.log('live')
+      console.log("live");
       setPlans(data.data);
       console.log(plans);
     } catch (error) {
@@ -302,8 +511,7 @@ const Live = (props) => {
     }
   };
 
-  const options = ServiceOptions;
-  const Songoptions = SongOptions;
+  
   return (
     <div className="background">
       <div className="nav">

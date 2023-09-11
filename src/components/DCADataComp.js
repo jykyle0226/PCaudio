@@ -1,18 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import "../Style/AudioComp.css";
-const DCADataComp = () => {
-
-
-
-  const storedDbValues = JSON.parse(localStorage.getItem("dBValues"));
-  const storedLeadVocals = JSON.parse(localStorage.getItem("leadVocals"));
-  const storedAllVocals = JSON.parse(localStorage.getItem("Allvocals"));
-
-  const LeadVocals = storedLeadVocals
-  const AllVocals = storedAllVocals
-  const dB = storedDbValues
-
+const DCADataComp = (props) => {
   return (
     <div className="AudioDataComp">
       <div id="AudioDataCompDiv" type="button" class="btn cube cube-hover">
@@ -30,7 +19,7 @@ const DCADataComp = () => {
             <div className="testbox">
               <div>
                 <div id="db" className="Edittext">
-                  <h1 className="ADCname">{}</h1>
+                  <h1 className="ADCname">{props.name}</h1>
                 </div>
               </div>
             </div>
@@ -57,7 +46,7 @@ const DCADataComp = () => {
                       id="edit-db"
                       className="ADCdb"
                       type="text"
-                      value={dB}
+                      value={props.dB}
                     />
                   </div>
                 </div>
